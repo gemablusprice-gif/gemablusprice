@@ -2,7 +2,19 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Gema+Price</title>
+
+<title>Gema+Price | تحميل صور سيارات بجودة عالية</title>
+ <link rel="icon" href="path_to_your_logo.png" type="image/face10.jpg">
+<meta name="description" content="Gema+Price موقع لتحميل صور سيارات فخمة وكلاسيكية بجودة عالية وبأسعار مناسبة.">
+
+<meta name="keywords" content="سيارات, صور سيارات, تحميل صور, سيارات فخمة, سيارات كلاسيك">
+
+<meta name="author" content="Gema+Price">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- مهم لـ Google -->
+<meta name="robots" content="index, follow">
 
 <style>
 body {
@@ -129,7 +141,7 @@ button {
 </head>
 
 <body>
-
+<button onclick="addItem()">➕ أضف منتج</button>
 <header>
   <div class="header-content">
     <img src="face10.jpg" class="logo">
@@ -187,48 +199,69 @@ button {
 </div>
 
 </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<script>
-let cart = [];
+const firebaseConfig = {
+  apiKey: "AIzaSyAjHSw-cDIn5Exn2M7s2-l-_dNdwZiH6E",
+  authDomain: "gemablusprice-a2663.firebaseapp.com",
+  projectId: "gemablusprice-a2663",
+  storageBucket: "gemablusprice-a2663.firebasestorage.app",
+  messagingSenderId: "922754795410",
+  appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b"
+};
 
-/* إضافة للسلة */
-function addToCart(name) {
-  cart.push(name);
-  updateCart();
-}
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-/* تحديث السلة */
-function updateCart() {
-  document.getElementById("cartCount").innerText = cart.length;
+/* ➕ إضافة منتج */
+window.addItem = async function () {
+  let name = prompt("اسم المنتج:");
+  let price = prompt("السعر:");
+  let img = prompt("رابط الصورة:");
 
-  let list = document.getElementById("cartItems");
-  list.innerHTML = "";
+  if (!name || !price || !img) return;
 
-  cart.forEach(item => {
-    let li = document.createElement("li");
-    li.innerText = item;
-    list.appendChild(li);
+  await addDoc(collection(db, "products"), {
+    name,
+    price,
+    img
+  });
+
+  loadItems();
+};
+
+/* 📦 عرض المنتجات */
+async function loadItems() {
+  const querySnapshot = await getDocs(collection(db, "products"));
+
+  let container = document.querySelector(".container");
+  container.innerHTML = "";
+
+  querySnapshot.forEach(doc => {
+    let data = doc.data();
+
+    let div = document.createElement("div");
+    div.className = "item";
+
+    div.innerHTML = `
+      <img src="${data.img}">
+      <h3>${data.name}</h3>
+      <p class="price">${data.price} جنيه</p>
+      <button onclick="addToCart('${data.name}')">أضف للسلة</button>
+    `;
+
+    container.appendChild(div);
   });
 }
 
-/* فتح وغلق السلة */
-function toggleCart() {
-  document.getElementById("cartPanel").classList.toggle("open");
-}
-
-/* فلترة بسيطة */
-function showCategory(category) {
-  let items = document.querySelectorAll(".item");
-
-  items.forEach(item => {
-    if (category === 'all' || item.classList.contains(category)) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-}
+loadItems();
 </script>
-
+<h2>تحميل صور سيارات فخمة وكلاسيك</h2>
+<p>
+أفضل موقع لتحميل صور السيارات بجودة عالية، سيارات حديثة وكلاسيكية.
+</p>
 </body>
 </html>
