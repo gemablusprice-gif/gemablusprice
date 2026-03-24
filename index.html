@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Gema+Price</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  direction: rtl;
+  background: #f1f1f1;
+}
+
+/* Header */
+header {
+  background: #000000bd;
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: #111;
+  overflow-x: auto;
+}
+
+.navbar a {
+  color: white;
+  background: #222;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Cart Button */
+.cart-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: gold;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Cart Count */
+#cartCount {
+  font-weight: bold;
+}
+
+/* Cart Panel */
+.cart-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background: white;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+  padding: 15px;
+  transform: translateX(-100%);
+  transition: 0.3s;
+  overflow-y: auto;
+}
+
+.cart-panel.open {
+  transform: translateX(0);
+}
+
+/* Products */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.item {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.item img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.price {
+  color: #1877f2;
+  font-weight: bold;
+}
+
+/* Button */
+button {
+  background: green;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <img src="imgi/face10.jpg" class="logo">
+    <h1>Gema+Price</h1>
+  </div>
+</header>
+
+<!-- Cart Button -->
+<div class="cart-btn" onclick="toggleCart()">
+  🛒 <span id="cartCount">0</span>
+</div>
+
+<!-- Cart Panel -->
+<div class="cart-panel" id="cartPanel">
+  <button onclick="toggleCart()">⬅ رجوع</button>
+  <h3>السلة</h3>
+  <ul id="cartItems"></ul>
+</div>
+
+<!-- Navbar -->
+<div class="navbar">
+  <a onclick="showCategory('all')">🔥 الكل</a>
+  <a onclick="showCategory('cars')">🚗 سيارات</a>
+  <a onclick="showCategory('classic')">🏁 كلاسيك</a>
+</div>
+
+<!-- Products -->
+<div class="container">
+
+  <div class="item cars">
+    <img src="imgi/face10.jpg">
+    <h3>سيارة فخمة</h3>
+    <p class="price">300 جنيه</p>
+    <a href="face10.jpg" download>
+    <button>تحميل ⬇️</button>
+  </a>
+  </div>
+
+  <div class="item classic">
+    <img src="imgi/face10.jpg">
+    <h3>سيارة كلاسيكية</h3>
+    <p class="price">120 جنيه</p>
+    <a href="face10.jpg" download>
+    <button>تحميل ⬇️</button>
+  </a>
+  </div>
+  <div class="item">
+  <img src="imgi/face10.jpg">
+  <h3>منتج 2</h3>
+  <p class="price">75 جنيه</p>
+
+  <a href="imgi/face10.jpg" download>
+    <button>تحميل ⬇️</button>
+  </a>
+</div>
+
+</div>
+
+<script>
+let cart = [];
+
+/* إضافة للسلة */
+function addToCart(name) {
+  cart.push(name);
+  updateCart();
+}
+
+/* تحديث السلة */
+function updateCart() {
+  document.getElementById("cartCount").innerText = cart.length;
+
+  let list = document.getElementById("cartItems");
+  list.innerHTML = "";
+
+  cart.forEach(item => {
+    let li = document.createElement("li");
+    li.innerText = item;
+    list.appendChild(li);
+  });
+}
+
+/* فتح وغلق السلة */
+function toggleCart() {
+  document.getElementById("cartPanel").classList.toggle("open");
+}
+
+/* فلترة بسيطة */
+function showCategory(category) {
+  let items = document.querySelectorAll(".item");
+
+  items.forEach(item => {
+    if (category === 'all' || item.classList.contains(category)) {
+      item.style.display = "block";
+    } else {
+      item.style.display = "none";
+    }
+  });
+}
+</script>
+
+</body>
+</html>
