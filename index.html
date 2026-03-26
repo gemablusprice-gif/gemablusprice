@@ -3,265 +3,636 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Gema+Price | تحميل صور سيارات بجودة عالية</title>
- <link rel="icon" href="path_to_your_logo.png" type="face10.jpg">
-<meta name="description" content="Gema+Price موقع لتحميل صور سيارات فخمة وكلاسيكية بجودة عالية وبأسعار مناسبة.">
-
-<meta name="keywords" content="سيارات, صور سيارات, تحميل صور, سيارات فخمة, سيارات كلاسيك">
-
-<meta name="author" content="Gema+Price">
+<title>Gema+Price | شعر وخواطر وقصائد حب</title>
+<link rel="icon" href="face10.jpg">
+<link rel="apple-touch-icon" href="face10.jpg">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="قصائد, شعر عربي, خواطر, حب, حكم, شعر حزين, اقتباسات">
+<meta name="description" content="منصة لكتابة ونشر القصائد والخواطر العربية والتفاعل معها">
+<meta property="og:title" content="Gema+Price | شعر وخواطر">
+<meta property="og:description" content="اكتب وشارك أجمل القصائد والخواطر">
+<meta property="og:image" content="face10.jpg">
+<div id="welcomeBox" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+">
 
-<!-- مهم لـ Google -->
-<meta name="robots" content="index, follow">
+  <div style="
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+  width:300px;
+  ">
+  
+    <h3>🌟 أهلاً بيك</h3>
+    <p>
+      اكتب قصيدتك ✍️<br>
+      وشاركنا إحساسك ❤️
+    </p>
 
+    <button onclick="closeWelcome()" class="btn">دخول 🚀</button>
+
+  </div>
+</div>
 <style>
 body {
-  margin: 0;
   font-family: Arial;
   direction: rtl;
-  background: #f1f1f1;
+  background: linear-gradient(135deg, #f5f7fa, #e4e7eb);
+  margin: 0;
 }
 
-/* Header */
-header {
-  background: #000000bd;
-  color: white;
-}
-
-.header-content {
+/* HEADER */
+.header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
+  background: rgba(114, 10, 173, 0.9);
+  padding: 15px 20px;
+  backdrop-filter: blur(10px);
 }
 
-.logo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-/* Navbar */
-.navbar {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  background: #111;
-  overflow-x: auto;
-}
-
-.navbar a {
-  color: white;
-  background: #222;
-  padding: 8px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-/* Cart Button */
-.cart-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: gold;
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-/* Cart Count */
-#cartCount {
+.logo-text {
+  color: rgb(255, 255, 255);
+  font-size: 24px;
   font-weight: bold;
 }
 
-/* Cart Panel */
-.cart-panel {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 250px;
-  height: 100%;
-  background: white;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
-  padding: 15px;
-  transform: translateX(-100%);
+/* buttons */
+.btn {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 25px;
+  cursor: pointer;
   transition: 0.3s;
-  overflow-y: auto;
 }
 
-.cart-panel.open {
-  transform: translateX(0);
+.btn:hover {
+  transform: scale(1.1);
 }
 
-/* Products */
+.login {
+  background: transparent;
+  color: gold;
+  border: 1px solid gold;
+}
+
+.add {
+  background: linear-gradient(45deg, gold, orange);
+  color: black;
+  font-weight: bold;
+}
+
+/* PRODUCTS */
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
   gap: 15px;
   padding: 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
 }
 
+/* CARD */
 .item {
-  background: white;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  padding: 15px;
+  border-radius: 20px;
+  text-align: center;
+
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.item h3 {
+  margin-bottom: 10px;
+}
+
+.actions-row {
+  margin-top: auto; /* 🔥 يخلي الأزرار تحت */
+}
+
+.item p {
+  color: #333;
+  font-size: 17px;
+  line-height: 2;
+  white-space: pre-line;
+
+  word-break: break-word;   /* 🔥 مهم جدًا */
+}
+/* IMAGE */
+img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+/* ACTIONS */
+.actions-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ❤️ LIKE */
+.like-btn {
+  border: none;
+  background: #ffe5ec;
+  color: #ff2e63;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s;
+}
+
+.like-btn:hover {
+  transform: scale(1.1);
+}
+
+.like-btn.liked {
+  animation: pop 0.3s ease;
+}
+
+/* 😊 SMILE */
+.smile-btn {
+  border: none;
+  background: #fff4cc;
+  color: #ff9800;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s;
+}
+
+.smile-btn:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.smile-btn.active {
+  animation: bounce 0.3s ease;
+}
+
+/* ANIMATION */
+@keyframes pop {
+  0% {transform: scale(1);}
+  50% {transform: scale(1.4);}
+  100% {transform: scale(1);}
+}
+
+@keyframes bounce {
+  0% {transform: scale(1);}
+  50% {transform: scale(1.5);}
+  100% {transform: scale(1);}
+}
+
+/* POPUP */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-box textarea {
+  width: 100%;
+  height: 180px;              /* 🔥 مساحة كبيرة */
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 15px;
+  border: none;
+  resize: none;
+  font-size: 16px;
+  line-height: 1.8;           /* 🔥 مريح للشعر */
+  direction: rtl;
+  background: rgba(255,255,255,0.8);
+}
+
+/* تأثير عند الكتابة */
+.popup-box textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px gold;
+}
+
+.popup-box h3 {
+  color: gold;
+}
+
+.popup-box input {
+  width: 100%;
+  margin: 8px 0;
   padding: 10px;
   border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: none;
 }
 
-.item img {
+/* VIEW */
+.view-box {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-content {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 20px;
+  width: 350px;
+  max-width: 90%;
+}
+
+.view-content img {
   width: 100%;
-  height: 100px;
+  max-height: 250px;
+  border-radius: 15px;
   object-fit: cover;
-  border-radius: 8px;
+}
+.categories {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  overflow-x: auto; /* 🔥 سكرول أفقي */
+  scrollbar-width: none;
 }
 
-.price {
-  color: #1877f2;
+.categories::-webkit-scrollbar {
+  display: none;
+}
+
+/* الزر */
+.cat-btn {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  background: #eee;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+/* hover */
+.cat-btn:hover {
+  transform: scale(1.1);
+}
+
+/* الزر النشط */
+.cat-btn.active {
+  background: linear-gradient(45deg, gold, orange);
+  color: black;
   font-weight: bold;
 }
+.popup-logo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  box-shadow: 0 0 25px gold, 0 0 50px orange;
+  display: block;
+  margin: 0 auto 20px;
 
-/* Button */
-button {
-  background: green;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 5px;
-  cursor: pointer;
+  animation: moveSpin 4s linear infinite;
+}
+
+@keyframes moveSpin {
+  0% {
+    transform: rotate(0deg) translateY(0);
+  }
+  50% {
+    transform: rotate(180deg) translateY(-15px);
+  }
+  100% {
+    transform: rotate(360deg) translateY(0);
+  }
 }
 </style>
-
 </head>
 
 <body>
-<button onclick="addItem()">➕ أضف منتج</button>
-<header>
-  <div class="header-content">
-    <img src="face10.jpg" class="logo">
-    <h1>Gema+Price</h1>
-  </div>
+
+<header class="header">
+  <h2 class="logo-text">Gema+Price</h2>
+  <div class="actions">
+    <button class="btn" onclick="myPosts()">📦 منشوراتي</button>
+    <button class="btn login" onclick="login()">🔐 تسجيل دخول</button>
+    <button class="btn add" onclick="openAddPopup()">➕ شاركناء قصايدك</button>
 </header>
-
-<!-- Cart Button -->
-<div class="cart-btn" onclick="toggleCart()">
-  🛒 <span id="cartCount">0</span>
+</div>
+  <div id="category">
+  <button onclick="selectCategory('حب', this)" class="cat-btn">❤️ حب</button>
+<button onclick="selectCategory('حزن', this)" class="cat-btn">😢 حزن</button>
+<button onclick="selectCategory('خواطر', this)" class="cat-btn">🌅 خواطر</button>
+<button onclick="selectCategory('حكم', this)" class="cat-btn">🧠 حكم</button>
+<button onclick="selectCategory('شوق', this)" class="cat-btn">🔥 شوق</button>
 </div>
 
-<!-- Cart Panel -->
-<div class="cart-panel" id="cartPanel">
-  <button onclick="toggleCart()">⬅ رجوع</button>
-  <h3>السلة</h3>
-  <ul id="cartItems"></ul>
+<div class="container"></div>
+
+<!-- POPUP -->
+<div id="popup" class="popup">
+
+  <div class="popup-box">
+
+    <img src="face10.jpg" class="popup-logo">
+
+    <h3>➕ اكتب الشعرك</h3>
+
+    <textarea id="name" placeholder="✍️ اكتب قصيدتك هنا..." rows="6"></textarea>
+    <input id="price" placeholder="📝 عنوان القصيدة">
+
+    <div class="popup-actions">
+      <button class="btn save" onclick="saveItem()">💾 حفظ</button>
+      <button class="btn cancel" onclick="closePopup()">❌</button>
 </div>
-
-<!-- Navbar -->
-<div class="navbar">
-  <a onclick="showCategory('all')">🔥 الكل</a>
-  <a onclick="showCategory('cars')">🚗 سيارات</a>
-  <a onclick="showCategory('classic')">🏁 كلاسيك</a>
-</div>
-
-<!-- Products -->
-<div class="container">
-
-  <div class="item cars">
-    <img src="face10.jpg">
-    <h3>سيارة فخمة</h3>
-    <p class="price">300 جنيه</p>
-    <a href="face10.jpg" download>
-    <button>تحميل ⬇️</button>
-  </a>
   </div>
-
-  <div class="item classic">
-    <img src="face10.jpg">
-    <h3>سيارة كلاسيكية</h3>
-    <p class="price">120 جنيه</p>
-    <a href="face10.jpg" download>
-    <button>تحميل ⬇️</button>
-  </a>
-  </div>
-  <div class="item">
-  <img src="face10.jpg">
-  <h3>منتج 2</h3>
-  <p class="price">75 جنيه</p>
-
-  <a href="face10.jpg" download>
-    <button>تحميل ⬇️</button>
-  </a>
+<div id="notify" style="
+position:fixed;
+top:20px;
+right:20px;
+background:black;
+color:gold;
+padding:10px;
+border-radius:10px;
+display:none;
+"></div>
 </div>
+<h1 style="text-align:center;">Welcome to Gema+Price</h1>
 
-</div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+  getFirestore, collection, addDoc, getDocs,
+  doc, updateDoc, increment,
+  query, where, deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import {
+  getAuth, signInWithPopup, GoogleAuthProvider
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+/* Firebase */
 const firebaseConfig = {
-  apiKey: "AIzaSyAjHSw-cDIn5Exn2M7s2-l-_dNdwZiH6E",
+  apiKey: "AIzaSyAjHSw-cDIn5Exn2zM7s2-l-_dNdwZiH6E",
   authDomain: "gemablusprice-a2663.firebaseapp.com",
   projectId: "gemablusprice-a2663",
   storageBucket: "gemablusprice-a2663.firebasestorage.app",
   messagingSenderId: "922754795410",
-  appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b"
+  appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b",
+  measurementId: "G-86PJQG21C1"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-/* ➕ إضافة منتج */
-window.addItem = async function () {
-  let name = prompt("اسم المنتج:");
-  let price = prompt("السعر:");
-  let img = prompt("رابط الصورة:");
+const container = document.querySelector(".container");
+const popup = document.getElementById("popup");
 
-  if (!name || !price || !img) return;
+/* ✅ المتغير */
+let selectedCategory = "عام";
 
-  await addDoc(collection(db, "products"), {
-    name,
-    price,
-    img
-  });
-
-  loadItems();
+window.closeWelcome = function(){
+  document.getElementById("welcomeBox").style.display = "none";
 };
 
-/* 📦 عرض المنتجات */
-async function loadItems() {
-  const querySnapshot = await getDocs(collection(db, "products"));
 
-  let container = document.querySelector(".container");
+/* 🔐 تسجيل دخول */
+window.login = async function() {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+
+    const user = result.user;
+
+    const q = query(collection(db,"users"), where("uid","==", user.uid));
+    const snap = await getDocs(q);
+
+    if(snap.empty){
+      let name = prompt("اكتب اسمك 👇");
+      if(!name) return alert("لازم تكتب اسم");
+
+      await addDoc(collection(db,"users"),{
+        uid: user.uid,
+        name
+      });
+    }
+
+    loadItems();
+
+  } catch(e){
+    alert(e.message);
+  }
+};
+
+/* popup */
+window.openAddPopup = () => popup.style.display="flex";
+window.closePopup = () => popup.style.display="none";
+
+/* 🎯 اختيار القسم */
+window.selectCategory = function(cat, el){
+  selectedCategory = cat;
+
+  document.querySelectorAll(".cat-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  el.classList.add("active");
+};
+
+/* ➕ حفظ القصيدة */
+window.saveItem = async function(){
+  try {
+    let poem = document.getElementById("name").value.trim();
+    let title = document.getElementById("price").value.trim();
+
+    if (!auth.currentUser){
+      alert("سجل دخول الأول 🔐");
+      return;
+    }
+
+    if (!poem || !title){
+      alert("اكتب القصيدة والعنوان ✍️");
+      return;
+    }
+
+    await addDoc(collection(db,"products"),{
+      name: poem,
+      price: title,
+      category: selectedCategory,
+      uid: auth.currentUser.uid,
+      likes: 0,
+      smiles: 0
+    });
+
+    alert("✅ تم حفظ القصيدة");
+
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+
+    closePopup();
+    loadItems();
+
+  } catch(e){
+    alert(e.message);
+  }
+};
+
+/* ❤️ لايك */
+function createLikeButton(data,id){
+  let btn = document.createElement("button");
+  btn.className = "like-btn";
+  btn.innerHTML = `❤️ <span>${data.likes || 0}</span>`;
+
+  btn.onclick = async ()=>{
+    await updateDoc(doc(db,"products",id),{
+      likes: increment(1)
+    });
+    loadItems();
+  };
+
+  return btn;
+}
+
+/* 😊 مبتسم */
+function createSmileButton(data,id){
+  let btn = document.createElement("button");
+  btn.className = "smile-btn";
+  btn.innerHTML = `😊 <span>${data.smiles || 0}</span>`;
+
+  btn.onclick = async ()=>{
+    await updateDoc(doc(db,"products",id),{
+      smiles: increment(1)
+    });
+    loadItems();
+  };
+
+  return btn;
+}
+
+/* 🗑 حذف */
+window.deleteItem = async function(id){
+  let ok = confirm("متأكد تحذف القصيدة؟ 🗑");
+  if(!ok) return;
+
+  try {
+    await deleteDoc(doc(db,"products",id));
+    alert("✅ تم الحذف");
+    myPosts();
+  } catch(e){
+    alert(e.message);
+  }
+};
+
+/* 📦 عرض كل القصايد */
+async function loadItems(){
   container.innerHTML = "";
 
-  querySnapshot.forEach(doc => {
-    let data = doc.data();
+  const snap = await getDocs(collection(db,"products"));
+
+  snap.forEach(docSnap=>{
+    let data = docSnap.data();
+    let id = docSnap.id;
+
+    let div = document.createElement("div");
+    div.className = "item";
+
+    let title = document.createElement("h3");
+    title.innerText = data.price;
+
+    let cat = document.createElement("p");
+    cat.innerText = data.category || "عام";
+    cat.style.background = "rgba(255,215,0,0.2)";
+    cat.style.padding = "3px 8px";
+    cat.style.borderRadius = "10px";
+
+    let poem = document.createElement("p");
+    poem.innerText = data.name;
+
+    let actions = document.createElement("div");
+    actions.className = "actions-row";
+
+    actions.append(
+      createLikeButton(data,id),
+      createSmileButton(data,id)
+    );
+
+    div.append(title, cat, poem, actions);
+    container.appendChild(div);
+  });
+}
+
+/* 📦 منشوراتي */
+window.myPosts = async function(){
+
+  if (!auth.currentUser){
+    alert("سجل دخول الأول");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  const snap = await getDocs(collection(db,"products"));
+
+  snap.forEach(docSnap=>{
+    let data = docSnap.data();
+
+    if(data.uid !== auth.currentUser.uid) return;
 
     let div = document.createElement("div");
     div.className = "item";
 
     div.innerHTML = `
-      <img src="${data.img}">
-      <h3>${data.name}</h3>
-      <p class="price">${data.price} جنيه</p>
-      <button onclick="addToCart('${data.name}')">أضف للسلة</button>
+      <h3>${data.price}</h3>
+      <p style="white-space:pre-line">${data.name}</p>
+      <p>❤️ ${data.likes || 0}</p>
+      <p>😊 ${data.smiles || 0}</p>
+      <button class="btn" onclick="deleteItem('${docSnap.id}')">🗑 حذف</button>
     `;
 
     container.appendChild(div);
   });
 }
 
+/* تشغيل أولي */
 loadItems();
+
 </script>
-<h2>تحميل صور سيارات فخمة وكلاسيك</h2>
-<p>
-أفضل موقع لتحميل صور السيارات بجودة عالية، سيارات حديثة وكلاسيكية.
-</p>
+
 </body>
 </html>
