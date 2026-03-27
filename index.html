@@ -436,30 +436,11 @@ window.closeWelcome = function(){
 window.login = async function() {
   try {
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-
-    const user = result.user;
-
-    const q = query(collection(db,"users"), where("uid","==", user.uid));
-    const snap = await getDocs(q);
-
-    if(snap.empty){
-      let name = prompt("اكتب اسمك 👇");
-      if(!name) return alert("لازم تكتب اسم");
-
-      await addDoc(collection(db,"users"),{
-        uid: user.uid,
-        name
-      });
-    }
-
-    loadItems();
-
+    await signInWithPopup(auth, provider);
   } catch(e){
     alert(e.message);
   }
 };
-
 /* popup */
 window.openAddPopup = () => popup.style.display="flex";
 window.closePopup = () => popup.style.display="none";
@@ -560,6 +541,9 @@ window.deleteItem = async function(id){
 };
 
 /* 📦 عرض كل القصايد */
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+/* 📦 تحميل القصايد */
 async function loadItems(){
   container.innerHTML = "";
 
@@ -577,9 +561,6 @@ async function loadItems(){
 
     let cat = document.createElement("p");
     cat.innerText = data.category || "عام";
-    cat.style.background = "rgba(255,215,0,0.2)";
-    cat.style.padding = "3px 8px";
-    cat.style.borderRadius = "10px";
 
     let poem = document.createElement("p");
     poem.innerText = data.name;
@@ -596,42 +577,11 @@ async function loadItems(){
     container.appendChild(div);
   });
 }
-
-/* 📦 منشوراتي */
-window.myPosts = async function(){
-
-  if (!auth.currentUser){
-    alert("سجل دخول الأول");
-    return;
-  }
-
-  container.innerHTML = "";
-
-  const snap = await getDocs(collection(db,"products"));
-
-  snap.forEach(docSnap=>{
-    let data = docSnap.data();
-
-    if(data.uid !== auth.currentUser.uid) return;
-
-    let div = document.createElement("div");
-    div.className = "item";
-
-    div.innerHTML = `
-      <h3>${data.price}</h3>
-      <p style="white-space:pre-line">${data.name}</p>
-      <p>❤️ ${data.likes || 0}</p>
-      <p>😊 ${data.smiles || 0}</p>
-      <button class="btn" onclick="deleteItem('${docSnap.id}')">🗑 حذف</button>
-    `;
-
-    container.appendChild(div);
-  });
-}
-
-/* تشغيل أولي */
-loadItems();
-
+loadItems(); // 🔥 تحميل أول مرة
+/* 🔥 مهم جدًا */
+onAuthStateChanged(auth, (user) => {
+  loadItems();
+});
 </script>
 
 </body>
