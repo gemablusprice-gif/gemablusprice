@@ -119,12 +119,7 @@ body {
 }
 
 .item p {
-  color: #333;
-  font-size: 17px;
-  line-height: 2;
-  white-space: pre-line;
-
-  word-break: break-word;   /* 🔥 مهم جدًا */
+  font-family: 'Amiri', 'Cairo', serif;
 }
 /* IMAGE */
 img {
