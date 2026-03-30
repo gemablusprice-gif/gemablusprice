@@ -3,111 +3,125 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Gema+Price | شعر وخواطر وقصائد حب</title>
+<title>قصائد حب قصيرة وخواطر رومانسية رسائل| Gema+Price</title>
+<link rel="stylesheet" href="css.css">
+<meta name="description" content="أفضل موقع قصائد حب، خواطر رومانسية، شعر حزين، وحكم مؤثرة. اكتشف أجمل الكلمات يومياً.">
+<meta name="keywords" content="قصائد, شعر, حب, خواطر, شعر عربي, حكم">
+<meta name="author" content="Gema+Price">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 🔥 تحسين الظهور في جوجل -->
+<meta name="robots" content="index, follow">
+
+<!-- 🔥 Open Graph (فيسبوك) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="قصائد حب وخواطر">
+<meta property="og:description" content="أجمل القصائد والخواطر الرومانسية والحزينة">
+<meta property="og:image" content="face10.jpg">
+<meta property="og:url" content="https://your-site.com">
+
+<!-- 🔥 Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="قصائد حب وخواطر">
+<meta name="twitter:description" content="أجمل القصائد والخواطر">
+<meta name="twitter:image" content="face10.jpg">
+
+<!-- 🔥 الخط -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+
+<!-- 🔥 PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#06b6d4">
+
+<!-- 🔥 أيقونة -->
 <link rel="icon" href="face10.jpg">
 <link rel="apple-touch-icon" href="face10.jpg">
-<link rel="stylesheet" href="css.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="قصائد, شعر عربي, خواطر, حب, حكم, شعر حزين, اقتباسات">
-<meta name="description" content="منصة لكتابة ونشر القصائد والخواطر العربية والتفاعل معها">
-<meta property="og:title" content="Gema+Price | شعر وخواطر">
-<meta property="og:description" content="اكتب وشارك أجمل القصائد والخواطر">
-<meta property="og:image" content="face10.jpg">
-<div id="welcomeBox" style="
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.7);
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:999;
-">
 
-  <div style="
-  background:white;
-  padding:20px;
-  border-radius:20px;
-  text-align:center;
-  width:300px;
-  ">
-  
-    <h3>🌟 أهلاً بيك</h3>
-    <p>
-      اكتب قصيدتك ✍️<br>
-      وشاركنا إحساسك ❤️
-    </p>
-
-    <button onclick="closeWelcome()" class="btn">دخول 🚀</button>
-
-  </div>
-</div>
 </head>
-
 <body>
 
+<!-- ===== Loader ===== -->
+<div id="loader">⏳ جاري التحميل...</div>
+
+<!-- ===== Welcome ===== -->
+<div id="welcomeBox" class="popup">
+  <div class="popup-box" style="background:#1e293b;color:white;">
+    <h3>🌟 أهلاً بيك</h3>
+    <p>اكتب قصيدتك ✍️ وشاركنا إحساسك ❤️</p>
+    <button onclick="closeWelcome()" class="btn">دخول 🚀</button>
+  </div>
+</div>
+
+<!-- ===== Header ===== -->
 <header class="header">
   <h1 class="logo-text">Gema+Price</h1>
+
+  <!-- 🔥 اسم المستخدم -->
+  <div id="userBox" style="color:white;font-size:14px;">غير مسجل</div>
+
   <div class="actions">
     <button class="btn" onclick="myPosts()">📦 منشوراتي</button>
     <button class="btn login" onclick="login()">🔐 تسجيل دخول</button>
-    <button class="btn add" onclick="openAddPopup()">➕ شاركناء قصايدك</button>
+    <button class="btn add" onclick="openAddPopup()">➕ أضف قصيدة</button>
+  </div>
 </header>
-</div>
-<div class="categories">
-  <button onclick="selectCategory('حب', this)" class="cat-btn active">❤️ حب</button>
-  <button onclick="selectCategory('حزن', this)" class="cat-btn">😢 حزن</button>
-  <button onclick="selectCategory('خواطر', this)" class="cat-btn">🌅 خواطر</button>
-  <button onclick="selectCategory('حكم', this)" class="cat-btn">🧠 حكم</button>
-  <button onclick="selectCategory('شوق', this)" class="cat-btn">🔥 شوق</button>
+
+<!-- ===== Views ===== -->
+<div class="views-box">
+  👀 <span id="viewsCount">0</span>
 </div>
 
+<!-- ===== Categories ===== -->
+
+<a href="love-poems.html" class="cat-btn">❤️ حب</a>
+
+<a href="sad-poems.html" class="cat-btn">😢 حزن</a>
+
+<a href="missing-messages.html" class="cat-btn">🔥 شوق</a>
+
+<a href="romantic-messages.html" class="cat-btn">🌅 خواطر</a>
+
+<!-- ===== Container ===== -->
 <div class="container"></div>
 
-<!-- POPUP -->
+<!-- ===== Popup Add ===== -->
 <div id="popup" class="popup">
-
   <div class="popup-box">
 
     <img src="face10.jpg" class="popup-logo">
 
-    <center><h3 class="now">+ اكتب الشعرك</h3></center>
+    <h3 class="now">✍️ اكتب قصيدتك</h3>
 
     <select id="poemCategory" class="category-select">
-  <option value="حب">❤️ حب</option>
-  <option value="حزن">😢 حزن</option>
-  <option value="خواطر">🌅 خواطر</option>
-  <option value="حكم">🧠 حكم</option>
-  <option value="شوق">🔥 شوق</option>
-  <option value="غزل">🌹 غزل</option>
-  <option value="فراق">💔 فراق</option>
-  <option value="أمل">✨ أمل</option>
-</select>
+      <option value="حب">❤️ حب</option>
+      <option value="حزن">😢 حزن</option>
+      <option value="خواطر">🌅 خواطر</option>
+      <option value="حكم">🧠 حكم</option>
+      <option value="شوق">🔥 شوق</option>
+    </select>
 
-    <textarea id="name" placeholder="✍️ اكتب قصيدتك هنا..." rows="6"></textarea>
-    <input id="price" placeholder="📝 عنوان القصيدة">
+    <textarea id="name" placeholder="اكتب القصيدة..."></textarea>
+    <input id="price" placeholder="عنوان القصيدة">
 
-    <div class="popup-actions">
-      <button class="btn save" onclick="saveItem()">💾 حفظ</button>
-      <button class="btn cancel" onclick="closePopup()">❌</button>
-</div>
+    <button class="btn add" onclick="saveItem()">💾 حفظ</button>
+    <button class="btn" onclick="closePopup()">❌ إغلاق</button>
+
   </div>
-<div id="notify" style="
-position:fixed;
-top:20px;
-right:20px;
-background:black;
-color:rgb(255, 238, 0);
-padding:10px;
-border-radius:10px;
-display:none;
-"></div>
 </div>
-<h1 style="text-align:center;">Welcome to Gema+Price</h1>
 
+<!-- ===== Notification ===== -->
+<div id="notify"></div>
 
-<script src="script.js" type="module"></script>
+<!-- ===== Script ===== -->
+<script type="module" src="script.js"></script>
+
+<!-- ===== Loader Hide ===== -->
+<script>
+window.onload = () => {
+  document.getElementById("loader").style.display = "none";
+};
+</script>
+
 </body>
 </html>
