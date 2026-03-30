@@ -1,19 +1,24 @@
+/* ===== Firebase Imports ===== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
 import {
   getFirestore, collection, addDoc, getDocs,
   doc, updateDoc, increment,
-  query, where, deleteDoc
+  query, where, deleteDoc,
+  setDoc, getDoc,
+  orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import {
-  getAuth, signInWithPopup, GoogleAuthProvider
+  getAuth, signInWithPopup, GoogleAuthProvider,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-/* Firebase */
+/* ===== Firebase Config ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAjHSw-cDIn5Exn2zM7s2-l-_dNdwZiH6E",
   authDomain: "gemablusprice-a2663.firebaseapp.com",
+  databaseURL: "https://gemablusprice-a2663-default-rtdb.firebaseio.com",
   projectId: "gemablusprice-a2663",
   storageBucket: "gemablusprice-a2663.firebasestorage.app",
   messagingSenderId: "922754795410",
@@ -25,84 +30,102 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-const container = document.querySelector(".container");
-const popup = document.getElementById("popup");
+/* ===== عناصر ===== */
+let container;
+let popup;
+let userBox;
 
-/* ✅ المتغير */
+/* ===== الحالة ===== */
 let selectedCategory = "الكل";
-window.closeWelcome = function(){
-  document.getElementById("welcomeBox").style.display = "none";
-};
 
+/* ===== تحميل الصفحة ===== */
+window.addEventListener("DOMContentLoaded", () => {
+  container = document.querySelector(".container");
+  popup = document.getElementById("popup");
+  userBox = document.getElementById("userBox");
 
-/* 🔐 تسجيل دخول */
-window.login = async function() {
+  loadItems();
+  updateViews();
+});
+
+/* ===== متابعة حالة المستخدم ===== */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    if (userBox) userBox.innerText = "👤 " + user.displayName;
+  } else {
+    if (userBox) userBox.innerText = "غير مسجل";
+  }
+});
+
+/* ===== تسجيل دخول ===== */
+window.login = async function () {
   try {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
-
     const user = result.user;
 
-    const q = query(collection(db,"users"), where("uid","==", user.uid));
-    const snap = await getDocs(q);
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
 
-    if(snap.empty){
-      let name = prompt("اكتب اسمك 👇");
-      if(!name) return alert("لازم تكتب اسم");
-
-      await addDoc(collection(db,"users"),{
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        name: user.displayName,
         uid: user.uid,
-        name
+        createdAt: Date.now()
       });
     }
 
+    alert("✅ تم تسجيل الدخول");
     loadItems();
 
-  } catch(e){
+  } catch (e) {
     alert(e.message);
   }
 };
 
-/* popup */
-window.openAddPopup = () => popup.style.display="flex";
-window.closePopup = () => popup.style.display="none";
+/* ===== popup ===== */
+window.openAddPopup = () => popup.style.display = "flex";
+window.closePopup = () => popup.style.display = "none";
 
-/* 🎯 اختيار القسم */
-window.selectCategory = function(cat, el){
+/* ===== اختيار القسم ===== */
+window.selectCategory = function (cat, el) {
   selectedCategory = cat;
 
-  document.querySelectorAll(".cat-btn").forEach(btn=>{
+  document.querySelectorAll(".cat-btn").forEach(btn => {
     btn.classList.remove("active");
   });
 
   el.classList.add("active");
 
-  loadItems(); // 🔥 دي أهم سطر
+  loadItems();
 };
-/* ➕ حفظ القصيدة */
-window.saveItem = async function(){
+
+/* ===== حفظ القصيدة ===== */
+window.saveItem = async function () {
   try {
     let poem = document.getElementById("name").value.trim();
     let title = document.getElementById("price").value.trim();
+    let category = document.getElementById("poemCategory").value || "عام";
 
-    if (!auth.currentUser){
+    if (!auth.currentUser) {
       alert("سجل دخول الأول 🔐");
       return;
     }
 
-    if (!poem || !title){
+    if (!poem || !title) {
       alert("اكتب القصيدة والعنوان ✍️");
       return;
     }
 
-    await addDoc(collection(db,"products"),{
-  name: poem,
-  price: title,
-  category: document.getElementById("poemCategory").value,
-  uid: auth.currentUser.uid,
-  likes: 0,
-  smiles: 0
-});
+    await addDoc(collection(db, "products"), {
+      name: poem,
+      price: title,
+      category: category,
+      uid: auth.currentUser.uid,
+      likes: 0,
+      smiles: 0,
+      createdAt: Date.now() // 🔥 مهم للترتيب
+    });
 
     alert("✅ تم حفظ القصيدة");
 
@@ -112,133 +135,217 @@ window.saveItem = async function(){
     closePopup();
     loadItems();
 
-  } catch(e){
+  } catch (e) {
     alert(e.message);
   }
 };
 
-/* ❤️ لايك */
-function createLikeButton(data,id){
+/* ===== أزرار التفاعل ===== */
+function createLikeButton(data, id) {
   let btn = document.createElement("button");
   btn.className = "like-btn";
-  btn.innerHTML = `❤️ <span>${data.likes || 0}</span>`;
+  btn.innerHTML = `❤️ ${data.likes || 0}`;
 
-  btn.onclick = async ()=>{
-    await updateDoc(doc(db,"products",id),{
+  btn.onclick = async () => {
+    await updateDoc(doc(db, "products", id), {
       likes: increment(1)
     });
-    loadItems();
+
+    data.likes = (data.likes || 0) + 1;
+    btn.innerHTML = `❤️ ${data.likes}`;
   };
 
   return btn;
 }
 
-/* 😊 مبتسم */
-function createSmileButton(data,id){
+function createSmileButton(data, id) {
   let btn = document.createElement("button");
   btn.className = "smile-btn";
-  btn.innerHTML = `😊 <span>${data.smiles || 0}</span>`;
+  btn.innerHTML = `😊 ${data.smiles || 0}`;
 
-  btn.onclick = async ()=>{
-    await updateDoc(doc(db,"products",id),{
+  btn.onclick = async () => {
+    await updateDoc(doc(db, "products", id), {
       smiles: increment(1)
     });
-    loadItems();
+
+    data.smiles = (data.smiles || 0) + 1;
+    btn.innerHTML = `😊 ${data.smiles}`;
   };
 
   return btn;
 }
 
-/* 🗑 حذف */
-window.deleteItem = async function(id){
-  let ok = confirm("متأكد تحذف القصيدة؟ 🗑");
-  if(!ok) return;
+/* ===== حذف ===== */
+window.deleteItem = async function (id) {
+  let ok = confirm("متأكد تحذف؟ 🗑");
+  if (!ok) return;
 
-  try {
-    await deleteDoc(doc(db,"products",id));
-    alert("✅ تم الحذف");
-    myPosts();
-  } catch(e){
-    alert(e.message);
-  }
+  await deleteDoc(doc(db, "products", id));
+  loadItems();
 };
 
-/* 📦 عرض كل القصايد */
-async function loadItems(){
-  container.innerHTML = "";
+/* ===== عرض القصائد ===== */
+async function loadItems() {
+  if (!container) return;
+
+  container.innerHTML = "⏳ جاري التحميل...";
 
   let q;
 
   if (selectedCategory === "الكل") {
-    q = collection(db,"products");
+    q = query(collection(db, "products"), orderBy("createdAt", "desc"));
   } else {
     q = query(
-      collection(db,"products"),
-      where("category", "==", selectedCategory)
+      collection(db, "products"),
+      where("category", "==", selectedCategory),
+      orderBy("createdAt", "desc")
     );
   }
 
   const snap = await getDocs(q);
 
-  snap.forEach(docSnap=>{
+  container.innerHTML = "";
+
+  snap.forEach(docSnap => {
     let data = docSnap.data();
     let id = docSnap.id;
 
     let div = document.createElement("div");
     div.className = "item";
 
-    let title = document.createElement("h3");
-    title.innerText = data.price;
-
-    let cat = document.createElement("p");
-    cat.innerText = data.category || "عام";
-
-    let poem = document.createElement("p");
-    poem.innerText = data.name;
+    // 🔥 كارت قابل للضغط
+    div.innerHTML = `
+      <a href="poem.html?id=${id}">
+        <h3>${data.price}</h3>
+        <small style="color:#94a3b8">${data.category}</small>
+        <p>${data.name.substring(0, 120)}...</p>
+      </a>
+    `;
 
     let actions = document.createElement("div");
     actions.className = "actions-row";
 
     actions.append(
-      createLikeButton(data,id),
-      createSmileButton(data,id)
+      createLikeButton(data, id),
+      createSmileButton(data, id)
     );
 
-    div.append(title, cat, poem, actions);
+    // 🔐 حذف لصاحب المنشور فقط
+    if (auth.currentUser && auth.currentUser.uid === data.uid) {
+      let del = document.createElement("button");
+      del.className = "btn delete-btn";
+      del.innerText = "🗑 حذف";
+      del.onclick = () => deleteItem(id);
+      actions.append(del);
+    }
+
+    div.appendChild(actions);
     container.appendChild(div);
   });
 }
-/* 📦 منشوراتي */
-window.myPosts = async function(){
 
-  if (!auth.currentUser){
-    alert("سجل دخول الأول");
-    return;
-  }
+  const snap = await getDocs(q);
 
   container.innerHTML = "";
 
-  const snap = await getDocs(collection(db,"products"));
-
-  snap.forEach(docSnap=>{
+  snap.forEach(docSnap => {
     let data = docSnap.data();
-
-    if(data.uid !== auth.currentUser.uid) return;
+    let id = docSnap.id;
 
     let div = document.createElement("div");
     div.className = "item";
 
     div.innerHTML = `
       <h3>${data.price}</h3>
-      <p style="white-space:pre-line">${data.name}</p>
-      <p>❤️ ${data.likes || 0}</p>
-      <p>😊 ${data.smiles || 0}</p>
-      <button class="btn" onclick="deleteItem('${docSnap.id}')">🗑 حذف</button>
+      <small style="color:#94a3b8">${data.category}</small>
+      <p>${data.name}</p>
     `;
 
+    let actions = document.createElement("div");
+    actions.className = "actions-row";
+
+    actions.append(
+      createLikeButton(data, id),
+      createSmileButton(data, id)
+    );
+
+    if (auth.currentUser && auth.currentUser.uid === data.uid) {
+      let del = document.createElement("button");
+      del.className = "btn";
+      del.innerText = "🗑 حذف";
+      del.onclick = () => deleteItem(id);
+      actions.append(del);
+    }
+
+    div.appendChild(actions);
     container.appendChild(div);
   });
+
+/* ===== عداد الزيارات ===== */
+async function updateViews() {
+  try {
+    const ref = doc(db, "stats", "visits");
+
+    await updateDoc(ref, {
+      count: increment(1)
+    }).catch(async () => {
+      await setDoc(ref, { count: 1 });
+    });
+
+    const snap = await getDoc(ref);
+
+    const el = document.getElementById("viewsCount");
+    if (el) {
+      el.innerText = snap.data().count;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-/* تشغيل أولي */
-loadItems();
+/* ===== منشوراتي ===== */
+window.myPosts = async function () {
+  if (!auth.currentUser) {
+    alert("سجل دخول الأول");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  const snap = await getDocs(collection(db, "products"));}
+/*foreach sna[محمد فواد حسن احمد سعد لو حصلت حاله طاره]*/
+snap.forEach(docSnap => {
+  let data = docSnap.data();
+  let id = docSnap.id;
+
+  let div = document.createElement("div");
+  div.className = "item";
+
+  div.innerHTML = `
+    <h3>${data.price}</h3>
+    <p>${data.name}</p>
+  `;
+
+  let actions = document.createElement("div");
+  actions.className = "actions-row";
+
+  // أزرار عادية
+  actions.innerHTML = `
+    <button class="like-btn">❤️ ${data.likes || 0}</button>
+    <button class="smile-btn">😊 ${data.smiles || 0}</button>
+  `;
+
+  // 🔥 زر الحذف يظهر فقط لصاحب المنشور
+  if (auth.currentUser && data.uid === auth.currentUser.uid) {
+    let delBtn = document.createElement("button");
+    delBtn.innerText = "🗑 حذف";
+    delBtn.className = "btn";
+    delBtn.onclick = () => deleteItem(id);
+
+    actions.appendChild(delBtn);
+  }
+
+  div.appendChild(actions);
+  container.appendChild(div);
+});
