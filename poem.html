@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
+<title id="pageTitle">قصيدة</title>
+
+<meta name="description" id="pageDesc" content="قصيدة جميلة">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 🔥 تحسين SEO -->
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header class="header">
+  <h1 class="logo-text">📖 تفاصيل القصيدة</h1>
+</header>
+
+<!-- 🔥 تنقل -->
+<div class="nav-links">
+  <a href="love-poems.html">❤️ حب</a> |
+  <a href="sad-poems.html">😢 حزن</a> |
+  <a href="missing-messages.html">🔥 شوق</a> |
+  <a href="romantic-messages.html">🌅 خواطر</a>
+</div>
+
+<div class="container">
+  <div class="item" id="poemBox">⏳ جاري التحميل...</div>
+</div>
+
+<!-- 🔥 إعلان -->
+<div class="ad-box" style="text-align:center;margin:20px;">
+  إعلان هنا
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, doc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* Firebase */
+const firebaseConfig = {
+  apiKey: "AIzaSyAjHSw-cDIn5Exn2zM7s2-l-_dNdwZiH6E",
+  authDomain: "gemablusprice-a2663.firebaseapp.com",
+  projectId: "gemablusprice-a2663",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* جلب ID */
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+/* تحميل القصيدة */
+async function loadPoem() {
+
+  const box = document.getElementById("poemBox");
+
+  if (!id) {
+    box.innerHTML = "❌ رابط غير صحيح";
+    return;
+  }
+
+  try {
+    const ref = doc(db, "products", id);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      box.innerHTML = "❌ القصيدة غير موجودة";
+      return;
+    }
+
+    const data = snap.data();
+
+    /* عرض */
+    box.innerHTML = `
+      <h2>${data.price}</h2>
+      <p>${data.name}</p>
+      <p style="opacity:0.6;">📂 ${data.category || "عام"}</p>
+    `;
+
+    /* 🔥 SEO */
+    document.title = data.price + " | قصائد حب قصيرة";
+
+    document.getElementById("pageDesc").setAttribute(
+      "content",
+      data.name.substring(0, 160)
+    );
+
+  } catch (e) {
+    box.innerHTML = "❌ حصل خطأ في التحميل";
+    console.log(e);
+  }
+}
+
+loadPoem();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+/* ====== BODY ====== */
+body {
+  font-family: 'Amiri', serif;
+  direction: rtl;
+  margin: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f1f5f9;
+}
+
+/* ====== HEADER ====== */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(135deg, #06b6d4, #2563eb);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-text {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* ====== NAV LINKS ====== */
+.nav-links {
+  text-align: center;
+  margin: 15px;
+}
+
+.nav-links a {
+  color: #38bdf8;
+  margin: 5px;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.nav-links a:hover {
+  color: gold;
+}
+
+/* ====== CONTAINER ====== */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+  gap: 15px;
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* ====== CARD ====== */
+.item {
+  background: rgba(7, 0, 0, 0);
+  backdrop-filter: blur(10px);
+
+  padding: 15px;
+  border-radius: 20px;
+  text-align: center;
+
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* ====== TITLES ====== */
+.item h2, .item h3 {
+  margin-bottom: 10px;
+  color: #facc15;
+  font-size: 22px;
+}
+
+/* ====== TEXT ====== */
+.item p {
+  color: #e2e8f0;
+  font-size: 18px;
+  line-height: 2;
+  white-space: pre-line;
+  text-align: right;
+
+  background: rgba(255,255,255,0.03);
+  padding: 12px;
+  border-radius: 12px;
+
+  border-right: none;
+}
+
+/* ====== LINKS ====== */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ====== BUTTONS ====== */
+.btn {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+/* ====== AD BOX ====== */
+.ad-box {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 15px;
+  margin: 20px auto;
+  width: fit-content;
+  color: gold;
+  font-size: 14px;
+}
+
+/* ====== FOOTER ====== */
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.6;
+}
+
+/* ====== LOADER ====== */
+#loader {
+  text-align: center;
+  margin: 20px;
+  color: #38bdf8;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .item p {
+    font-size: 16px;
+  }
+}
+/* ====== HERO ====== */
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.hero h1 {
+  font-size: 28px;
+  color: #facc15;
+}
+
+.hero p {
+  opacity: 0.7;
+}
+
+/* ====== BIG SECTIONS ====== */
+.big-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+/* ====== BIG CARD ====== */
+.big-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 120px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: bold;
+
+  text-decoration: none;
+  color: white;
+
+  transition: 0.3s;
+}
+
+.big-card:hover {
+  transform: scale(1.05);
+}
+
+/* ألوان */
+.love { background: linear-gradient(135deg, #ff4d6d, #ff758f); }
+.sad { background: linear-gradient(135deg, #334155, #1e293b); }
+.shawq { background: linear-gradient(135deg, #06b6d4, #0ea5e9); }
+.romantic { background: linear-gradient(135deg, #a855f7, #ec4899); }
+
+/* ====== SEO TEXT ====== */
+.seo-text {
+  text-align: center;
+  padding: 20px;
+}
+
+.seo-text h2 {
+  color: gold;
+}
+/* ====== NAV MODERN ====== */
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  margin: 15px;
+
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+
+  border-radius: 40px;
+  width: fit-content;
+  margin-inline: auto;
+
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+
+/* الروابط */
+.nav-links a {
+  padding: 8px 14px;
+  border-radius: 25px;
+  text-decoration: none;
+
+  font-size: 14px;
+  color: #e2e8f0;
+
+  transition: 0.3s;
+}
+
+/* hover */
+.nav-links a:hover {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: white;
+  transform: translateY(-2px);
+}
+@media (max-width: 768px) {
+
+  .nav-links {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links a {
+    white-space: nowrap;
+  }
+
+}
