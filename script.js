@@ -6,9 +6,9 @@ import {
   doc, updateDoc, increment,
   query, where, deleteDoc,
   setDoc, getDoc,
-  orderBy
+  orderBy,
+  onSnapshot   // 🔥 أضف دي
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
 import {
   getAuth, signInWithPopup, GoogleAuthProvider,
   onAuthStateChanged
@@ -39,7 +39,7 @@ let userBox;
 let selectedCategory = "الكل";
 
 /* ===== تحميل الصفحة ===== */
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   container = document.querySelector(".container");
   popup = document.getElementById("popup");
   userBox = document.getElementById("userBox");
@@ -47,7 +47,42 @@ window.addEventListener("DOMContentLoaded", () => {
   loadItems();
   updateViews();
 });
+/* ===== Online Users ===== */
 
+// ID لكل زائر
+const userId = Date.now().toString();
+
+// تسجيل الدخول (أونلاين)
+await setDoc(doc(db, "onlineUsers", userId), {
+  time: Date.now()
+});
+
+// حذف عند الخروج
+window.addEventListener("beforeunload", async () => {
+  await deleteDoc(doc(db, "onlineUsers", userId));
+});
+
+// عرض العدد مباشر
+const onlineEl = document.getElementById("onlineCount");
+
+onSnapshot(collection(db, "onlineUsers"), (snapshot) => {
+
+  if (onlineEl) {
+    onlineEl.innerText = snapshot.size;
+  }
+
+  // 🔥 تنظيف الناس اللي خرجت فجأة
+  const now = Date.now();
+
+  snapshot.forEach(docSnap => {
+    let data = docSnap.data();
+
+    if (now - data.time > 30000) {
+      deleteDoc(doc(db, "onlineUsers", docSnap.id));
+    }
+  });
+
+});
 /* ===== متابعة حالة المستخدم ===== */
 onAuthStateChanged(auth, (user) => {
   if (user) {
