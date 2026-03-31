@@ -6,9 +6,9 @@ import {
   doc, updateDoc, increment,
   query, where, deleteDoc,
   setDoc, getDoc,
-  orderBy,
-  onSnapshot   // 🔥 أضف دي
+  orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 import {
   getAuth, signInWithPopup, GoogleAuthProvider,
   onAuthStateChanged
@@ -31,64 +31,59 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 /* ===== عناصر ===== */
-let container;
-let popup;
-let userBox;
-
-/* ===== الحالة ===== */
+let container, popup, userBox;
 let selectedCategory = "الكل";
 
 /* ===== تحميل الصفحة ===== */
 window.addEventListener("DOMContentLoaded", async () => {
+
   container = document.querySelector(".container");
   popup = document.getElementById("popup");
   userBox = document.getElementById("userBox");
 
   loadItems();
   updateViews();
-});
-/* ===== Online Users ===== */
 
-// ID لكل زائر
-const userId = Date.now().toString();
+  /* ===== Online Users ===== */
+  const userId = Date.now().toString();
 
-// تسجيل الدخول (أونلاين)
-await setDoc(doc(db, "onlineUsers", userId), {
-  time: Date.now()
-});
+  await setDoc(doc(db, "onlineUsers", userId), {
+    time: Date.now()
+  });
 
-// حذف عند الخروج
-window.addEventListener("beforeunload", async () => {
-  await deleteDoc(doc(db, "onlineUsers", userId));
-});
+  window.addEventListener("beforeunload", async () => {
+    await deleteDoc(doc(db, "onlineUsers", userId));
+  });
 
-// عرض العدد مباشر
-const onlineEl = document.getElementById("onlineCount");
+  const onlineEl = document.getElementById("onlineCount");
 
-onSnapshot(collection(db, "onlineUsers"), (snapshot) => {
+  onSnapshot(collection(db, "onlineUsers"), (snapshot) => {
 
-  if (onlineEl) {
-    onlineEl.innerText = snapshot.size;
-  }
-
-  // 🔥 تنظيف الناس اللي خرجت فجأة
-  const now = Date.now();
-
-  snapshot.forEach(docSnap => {
-    let data = docSnap.data();
-
-    if (now - data.time > 30000) {
-      deleteDoc(doc(db, "onlineUsers", docSnap.id));
+    if (onlineEl) {
+      onlineEl.innerText = snapshot.size;
     }
+
+    // تنظيف المستخدمين الغير نشطين
+    const now = Date.now();
+
+    snapshot.forEach(docSnap => {
+      let data = docSnap.data();
+
+      if (now - data.time > 30000) {
+        deleteDoc(doc(db, "onlineUsers", docSnap.id));
+      }
+    });
+
   });
 
 });
-/* ===== متابعة حالة المستخدم ===== */
+
+/* ===== حالة المستخدم ===== */
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    if (userBox) userBox.innerText = "👤 " + user.displayName;
+    userBox.innerText = "👤 " + user.displayName;
   } else {
-    if (userBox) userBox.innerText = "غير مسجل";
+    userBox.innerText = "غير مسجل";
   }
 });
 
@@ -115,6 +110,7 @@ window.login = async function () {
 
   } catch (e) {
     alert(e.message);
+    console.error(e);
   }
 };
 
@@ -135,7 +131,7 @@ window.selectCategory = function (cat, el) {
   loadItems();
 };
 
-/* ===== حفظ القصيدة ===== */
+/* ===== حفظ ===== */
 window.saveItem = async function () {
   try {
     let poem = document.getElementById("name").value.trim();
@@ -148,21 +144,21 @@ window.saveItem = async function () {
     }
 
     if (!poem || !title) {
-      alert("اكتب القصيدة والعنوان ✍️");
+      alert("اكتب البيانات ✍️");
       return;
     }
 
     await addDoc(collection(db, "products"), {
       name: poem,
       price: title,
-      category: category,
+      category,
       uid: auth.currentUser.uid,
       likes: 0,
       smiles: 0,
-      createdAt: Date.now() // 🔥 مهم للترتيب
+      createdAt: Date.now()
     });
 
-    alert("✅ تم حفظ القصيدة");
+    alert("✅ تم الحفظ");
 
     document.getElementById("name").value = "";
     document.getElementById("price").value = "";
@@ -175,18 +171,16 @@ window.saveItem = async function () {
   }
 };
 
-/* ===== أزرار التفاعل ===== */
+/* ===== أزرار ===== */
 function createLikeButton(data, id) {
   let btn = document.createElement("button");
-  btn.className = "like-btn";
   btn.innerHTML = `❤️ ${data.likes || 0}`;
 
   btn.onclick = async () => {
     await updateDoc(doc(db, "products", id), {
       likes: increment(1)
     });
-
-    data.likes = (data.likes || 0) + 1;
+    data.likes++;
     btn.innerHTML = `❤️ ${data.likes}`;
   };
 
@@ -195,15 +189,13 @@ function createLikeButton(data, id) {
 
 function createSmileButton(data, id) {
   let btn = document.createElement("button");
-  btn.className = "smile-btn";
   btn.innerHTML = `😊 ${data.smiles || 0}`;
 
   btn.onclick = async () => {
     await updateDoc(doc(db, "products", id), {
       smiles: increment(1)
     });
-
-    data.smiles = (data.smiles || 0) + 1;
+    data.smiles++;
     btn.innerHTML = `😊 ${data.smiles}`;
   };
 
@@ -212,14 +204,13 @@ function createSmileButton(data, id) {
 
 /* ===== حذف ===== */
 window.deleteItem = async function (id) {
-  let ok = confirm("متأكد تحذف؟ 🗑");
-  if (!ok) return;
+  if (!confirm("متأكد؟")) return;
 
   await deleteDoc(doc(db, "products", id));
   loadItems();
 };
 
-/* ===== عرض القصائد ===== */
+/* ===== عرض ===== */
 async function loadItems() {
   if (!container) return;
 
@@ -248,27 +239,22 @@ async function loadItems() {
     let div = document.createElement("div");
     div.className = "item";
 
-    // 🔥 كارت قابل للضغط
     div.innerHTML = `
       <a href="poem.html?id=${id}">
         <h3>${data.price}</h3>
-        <small style="color:#94a3b8">${data.category}</small>
         <p>${data.name.substring(0, 120)}...</p>
       </a>
     `;
 
     let actions = document.createElement("div");
-    actions.className = "actions-row";
 
     actions.append(
       createLikeButton(data, id),
       createSmileButton(data, id)
     );
 
-    // 🔐 حذف لصاحب المنشور فقط
     if (auth.currentUser && auth.currentUser.uid === data.uid) {
       let del = document.createElement("button");
-      del.className = "btn delete-btn";
       del.innerText = "🗑 حذف";
       del.onclick = () => deleteItem(id);
       actions.append(del);
@@ -279,44 +265,7 @@ async function loadItems() {
   });
 }
 
-  const snap = await getDocs(q);
-
-  container.innerHTML = "";
-
-  snap.forEach(docSnap => {
-    let data = docSnap.data();
-    let id = docSnap.id;
-
-    let div = document.createElement("div");
-    div.className = "item";
-
-    div.innerHTML = `
-      <h3>${data.price}</h3>
-      <small style="color:#94a3b8">${data.category}</small>
-      <p>${data.name}</p>
-    `;
-
-    let actions = document.createElement("div");
-    actions.className = "actions-row";
-
-    actions.append(
-      createLikeButton(data, id),
-      createSmileButton(data, id)
-    );
-
-    if (auth.currentUser && auth.currentUser.uid === data.uid) {
-      let del = document.createElement("button");
-      del.className = "btn";
-      del.innerText = "🗑 حذف";
-      del.onclick = () => deleteItem(id);
-      actions.append(del);
-    }
-
-    div.appendChild(actions);
-    container.appendChild(div);
-  });
-
-/* ===== عداد الزيارات ===== */
+/* ===== Views ===== */
 async function updateViews() {
   try {
     const ref = doc(db, "stats", "visits");
@@ -330,9 +279,7 @@ async function updateViews() {
     const snap = await getDoc(ref);
 
     const el = document.getElementById("viewsCount");
-    if (el) {
-      el.innerText = snap.data().count;
-    }
+    if (el) el.innerText = snap.data().count;
 
   } catch (e) {
     console.log(e);
@@ -348,39 +295,21 @@ window.myPosts = async function () {
 
   container.innerHTML = "";
 
-  const snap = await getDocs(collection(db, "products"));}
-/*foreach sna[محمد فواد حسن احمد سعد لو حصلت حاله طاره]*/
-snap.forEach(docSnap => {
-  let data = docSnap.data();
-  let id = docSnap.id;
+  const snap = await getDocs(collection(db, "products"));
 
-  let div = document.createElement("div");
-  div.className = "item";
+  snap.forEach(docSnap => {
+    let data = docSnap.data();
 
-  div.innerHTML = `
-    <h3>${data.price}</h3>
-    <p>${data.name}</p>
-  `;
+    if (data.uid !== auth.currentUser.uid) return;
 
-  let actions = document.createElement("div");
-  actions.className = "actions-row";
+    let div = document.createElement("div");
+    div.className = "item";
 
-  // أزرار عادية
-  actions.innerHTML = `
-    <button class="like-btn">❤️ ${data.likes || 0}</button>
-    <button class="smile-btn">😊 ${data.smiles || 0}</button>
-  `;
+    div.innerHTML = `
+      <h3>${data.price}</h3>
+      <p>${data.name}</p>
+    `;
 
-  // 🔥 زر الحذف يظهر فقط لصاحب المنشور
-  if (auth.currentUser && data.uid === auth.currentUser.uid) {
-    let delBtn = document.createElement("button");
-    delBtn.innerText = "🗑 حذف";
-    delBtn.className = "btn";
-    delBtn.onclick = () => deleteItem(id);
-
-    actions.appendChild(delBtn);
-  }
-
-  div.appendChild(actions);
-  container.appendChild(div);
-});
+    container.appendChild(div);
+  });
+};
