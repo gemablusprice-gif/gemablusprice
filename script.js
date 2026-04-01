@@ -11,7 +11,9 @@ import {
   getAuth, signInWithPopup, GoogleAuthProvider,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
+import { 
+  getDatabase, ref, set, onDisconnect, onValue 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 /* ===== Firebase Config ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAjHSw-cDIn5Exn2zM7s2-l-_dNdwZiH6E",
@@ -26,7 +28,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+// 🔥 Realtime Online System
+const dbRT = getDatabase(app);
 
+// ID لكل زائر
+const userIdRT = Date.now().toString();
+
+// مسار
+const userRefRT = ref(dbRT, "onlineUsers/" + userIdRT);
+
+// تسجيل الدخول
+set(userRefRT, true);
+
+// حذف عند الخروج
+onDisconnect(userRefRT).remove();
+
+// قراءة العدد
+const countRefRT = ref(dbRT, "onlineUsers");
+
+onValue(countRefRT, (snapshot) => {
+  const data = snapshot.val();
+  const count = data ? Object.keys(data).length : 0;
+
+  const el = document.getElementById("onlineCount");
+  if (el) el.innerText = count;
+});
 /* ===== عناصر DOM ===== */
 let container, popup, userBox;
 let selectedCategory = "الكل";
