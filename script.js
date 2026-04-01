@@ -110,25 +110,59 @@ window.closePopup = () => popup.style.display = "none";
 
 /* ===== حفظ ===== */
 window.saveItem = async function () {
-  let poem = document.getElementById("name").value.trim();
-  let title = document.getElementById("price").value.trim();
-  let category = document.getElementById("poemCategory").value;
+  console.log("🔥 تم الضغط على نشر");
 
-  if (!auth.currentUser) return alert("سجل دخول الأول");
-  if (!poem || !title) return alert("اكتب البيانات");
+  let poemEl = document.getElementById("name");
+  let titleEl = document.getElementById("price");
+  let catEl = document.getElementById("poemCategory");
 
-  await addDoc(collection(db, "products"), {
-    name: poem,
-    price: title,
-    category,
-    uid: auth.currentUser.uid,
-    likes: 0,
-    smiles: 0,
-    createdAt: Date.now()
-  });
+  // 🔴 تحقق من وجود العناصر
+  if (!poemEl || !titleEl || !catEl) {
+    alert("❌ في عنصر ناقص في الصفحة");
+    return;
+  }
 
-  closePopup();
-  loadItems();
+  let poem = poemEl.value.trim();
+  let title = titleEl.value.trim();
+  let category = catEl.value;
+
+  // 🔴 تحقق تسجيل الدخول
+  if (!auth.currentUser) {
+    alert("⚠️ لازم تسجل دخول الأول");
+    return;
+  }
+
+  // 🔴 تحقق البيانات
+  if (!poem || !title) {
+    alert("⚠️ اكتب القصيدة والعنوان");
+    return;
+  }
+
+  try {
+    // 🔥 إضافة في فايربيس
+    await addDoc(collection(db, "products"), {
+      name: poem,
+      price: title,
+      category,
+      uid: auth.currentUser.uid,
+      likes: 0,
+      smiles: 0,
+      createdAt: Date.now()
+    });
+
+    alert("✅ تم نشر القصيدة");
+
+    // 🔥 تنظيف الحقول
+    poemEl.value = "";
+    titleEl.value = "";
+
+    closePopup();
+    loadItems();
+
+  } catch (error) {
+    console.error("🔥 خطأ:", error);
+    alert("❌ فشل النشر: " + error.message);
+  }
 };
 
 /* ===== Like ===== */
