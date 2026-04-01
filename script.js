@@ -6,7 +6,7 @@ import {
   doc, updateDoc, increment,
   query, where, deleteDoc,
   setDoc, getDoc,
-  orderBy, onSnapshot
+  orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import {
@@ -14,28 +14,51 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+/* 🔥 Realtime */
+import {
+  getDatabase, ref, set, onDisconnect, onValue
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
 /* ===== Firebase Config ===== */
 const firebaseConfig = {
-  apiKey: "AIzaSyAjHSw-cDIn5Exn2zM7s2-l-_dNdwZiH6E",
+  apiKey: "AIzaSyAjHSw...",
   authDomain: "gemablusprice-a2663.firebaseapp.com",
   databaseURL: "https://gemablusprice-a2663-default-rtdb.firebaseio.com",
   projectId: "gemablusprice-a2663",
-  storageBucket: "gemablusprice-a2663.firebasestorage.app",
-  messagingSenderId: "922754795410",
-  appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b",
-  measurementId: "G-86PJQG21C1"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const dbRT = getDatabase(app);
 
 /* ===== عناصر DOM ===== */
 let container, popup, userBox;
 let selectedCategory = "الكل";
 
+/* ===== 🔥 Online System ===== */
+const userId = Date.now().toString();
+const userRef = ref(dbRT, "onlineUsers/" + userId);
+
+// دخول
+set(userRef, true);
+
+// خروج
+onDisconnect(userRef).remove();
+
+// قراءة العدد
+const countRef = ref(dbRT, "onlineUsers");
+
+onValue(countRef, (snapshot) => {
+  const data = snapshot.val();
+  const count = data ? Object.keys(data).length : 0;
+
+  const el = document.getElementById("onlineCount");
+  if (el) el.innerText = count;
+});
+
 /* ===== تحميل الصفحة ===== */
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", () => {
 
   container = document.querySelector(".container");
   popup = document.getElementById("popup");
@@ -43,38 +66,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   loadItems();
   updateViews();
-
-  /* ===== 🔥 Online Users (Firestore) ===== */
-  const userId = Date.now().toString();
-
-  await setDoc(doc(db, "onlineUsers", userId), {
-    time: Date.now()
-  });
-
-  setInterval(async () => {
-    await setDoc(doc(db, "onlineUsers", userId), {
-      time: Date.now()
-    });
-  }, 10000);
-
-  window.addEventListener("beforeunload", async () => {
-    await deleteDoc(doc(db, "onlineUsers", userId));
-  });
-
-  const onlineEl = document.getElementById("onlineCount");
-
-  onSnapshot(collection(db, "onlineUsers"), async (snapshot) => {
-    if (onlineEl) onlineEl.innerText = snapshot.size;
-
-    // تنظيف المستخدمين الغير نشطين
-    const now = Date.now();
-
-    const deletes = snapshot.docs
-      .filter(d => now - d.data().time > 30000)
-      .map(d => deleteDoc(doc(db, "onlineUsers", d.id)));
-
-    await Promise.all(deletes);
-  });
 });
 
 /* ===== حالة المستخدم ===== */
@@ -119,6 +110,7 @@ window.saveItem = async function () {
 /* ===== Like ===== */
 function createLikeButton(data, id) {
   let btn = document.createElement("button");
+  btn.classList.add("like-btn");
 
   const liked = JSON.parse(localStorage.getItem("liked") || "[]");
   let isLiked = liked.includes(id);
@@ -129,16 +121,21 @@ function createLikeButton(data, id) {
   btn.onclick = async () => {
     if (isLiked) return;
 
-    await updateDoc(doc(db, "products", id), {
-      likes: increment(1)
-    });
+    try {
+      await updateDoc(doc(db, "products", id), {
+        likes: increment(1)
+      });
 
-    data.likes++;
-    btn.innerHTML = `❤️ ${data.likes}`;
-    btn.disabled = true;
+      data.likes++;
+      btn.innerHTML = `❤️ ${data.likes}`;
+      btn.disabled = true;
 
-    liked.push(id);
-    localStorage.setItem("liked", JSON.stringify(liked));
+      liked.push(id);
+      localStorage.setItem("liked", JSON.stringify(liked));
+    } catch (e) {
+      alert("خطأ في اللايك ❌");
+      console.log(e);
+    }
   };
 
   return btn;
@@ -147,6 +144,7 @@ function createLikeButton(data, id) {
 /* ===== Smile ===== */
 function createSmileButton(data, id) {
   let btn = document.createElement("button");
+  btn.classList.add("smile-btn");
 
   const smiled = JSON.parse(localStorage.getItem("smiled") || "[]");
   let isSmiled = smiled.includes(id);
@@ -157,16 +155,21 @@ function createSmileButton(data, id) {
   btn.onclick = async () => {
     if (isSmiled) return;
 
-    await updateDoc(doc(db, "products", id), {
-      smiles: increment(1)
-    });
+    try {
+      await updateDoc(doc(db, "products", id), {
+        smiles: increment(1)
+      });
 
-    data.smiles++;
-    btn.innerHTML = `😊 ${data.smiles}`;
-    btn.disabled = true;
+      data.smiles++;
+      btn.innerHTML = `😊 ${data.smiles}`;
+      btn.disabled = true;
 
-    smiled.push(id);
-    localStorage.setItem("smiled", JSON.stringify(smiled));
+      smiled.push(id);
+      localStorage.setItem("smiled", JSON.stringify(smiled));
+    } catch (e) {
+      alert("خطأ في السمايل ❌");
+      console.log(e);
+    }
   };
 
   return btn;
@@ -203,6 +206,7 @@ async function loadItems() {
     `;
 
     let actions = document.createElement("div");
+    actions.className = "actions";
 
     actions.append(
       createLikeButton(data, id),
