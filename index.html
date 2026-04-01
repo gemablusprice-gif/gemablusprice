@@ -3,76 +3,52 @@
 <head>
 <meta charset="UTF-8">
 
-<title>قصائد حب قصيرة وخواطر رومانسية رسائل| Gema+Price</title>
-<link rel="stylesheet" href="css.css">
-<meta name="description" content="أفضل موقع قصائد حب، خواطر رومانسية، شعر حزين، وحكم مؤثرة. اكتشف أجمل الكلمات يومياً.">
-<meta name="keywords" content="قصائد, شعر, حب, خواطر, شعر عربي, حكم">
-<meta name="author" content="Gema+Price">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3804205769137448"
-     crossorigin="anonymous"></script>
+<title>اكتب قصيدتك وشاركها مع الجميع | Gema+Price</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 🔥 تحسين الظهور في جوجل -->
-<meta name="robots" content="index, follow">
+<meta name="description" content="منصة عربية لكتابة ومشاركة القصائد والخواطر. عبّر عن إحساسك الآن.">
 
-<!-- 🔥 Open Graph (فيسبوك) -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="قصائد حب وخواطر">
-<meta property="og:description" content="أجمل القصائد والخواطر الرومانسية والحزينة">
-<meta property="og:image" content="face10.jpg">
-<meta property="og:url" content="https://your-site.com">
+<link rel="stylesheet" href="css.css">
 
-<!-- 🔥 Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="قصائد حب وخواطر">
-<meta name="twitter:description" content="أجمل القصائد والخواطر">
-<meta name="twitter:image" content="face10.jpg">
-
-<!-- 🔥 الخط -->
 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 
-<!-- 🔥 PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#06b6d4">
-
-<!-- 🔥 أيقونة -->
-<link rel="icon" href="face10.jpg">
-<link rel="apple-touch-icon" href="face10.jpg">
-
 </head>
+
 <body>
 
-<!-- ===== Loader ===== -->
+<!-- Loader -->
 <div id="loader">⏳ جاري التحميل...</div>
 
-<!-- ===== Welcome ===== -->
+<!-- Welcome -->
 <div id="welcomeBox" class="popup">
-  <div class="popup-box" style="background:#1e293b;color:white;">
-    <h3>🌟 أهلاً بيك</h3>
-    <p>اكتب قصيدتك ✍️ وشاركنا إحساسك ❤️</p>
-    <button onclick="closeWelcome()" class="btn">دخول 🚀</button>
+  <div class="popup-box">
+    <h3>🌟 أهلاً بك</h3>
+    <p>اكتب قصيدتك وشارك إحساسك مع العالم ❤️</p>
+    <button onclick="closeWelcome()" class="btn">ابدأ الآن 🚀</button>
   </div>
 </div>
 
-<!-- ===== Header ===== -->
+<!-- Header -->
 <header class="header">
-  <h1 class="logo-text">اكتب وشارك قصائدك مع العالم</h1>
+  <h1 class="logo-text">اكتب قصيدتك… ودع العالم يشعر بك ❤️</h1>
 
-  <!-- 🔥 اسم المستخدم -->
-  <div id="userBox" style="color:white;font-size:14px;">غير مسجل</div>
+  <div id="userBox">غير مسجل</div>
 
   <div class="actions">
-    <button class="btn" onclick="myPosts()">📦 منشوراتي</button>
-    <button class="btn login" onclick="login()">🔐 تسجيل دخول</button>
-    <button class="btn add" onclick="openAddPopup()">➕ شارك الآن</button>
+    <button class="btn" onclick="login()">🔐 تسجيل دخول</button>
+    <div class="online-box">
+  👀 <span id="onlineCount">0</span> متصل الآن
+</div>
   </div>
 </header>
 
-<!-- ===== Views ===== -->
-<div class="views1">
-  👀 <span id="viewsCount">0</span> online<span id="onlineCount" class="views-box">0</span>
+<!-- Hero -->
+<div class="hero">
+  <h2>شارك مشاعرك… واكتشف أجمل القصائد</h2>
+  <p>منصة عربية تجمع كل من يحب الشعر ❤️</p>
+  <button class="btn add" onclick="openAddPopup()">✍️ اكتب أول قصيدة لك الآن</button>
 </div>
-
 <!-- ===== Categories ===== -->
 
 <a href="love-poems.html" class="cat-btn">❤️ حب</a>
@@ -83,47 +59,46 @@
 
 <a href="romantic-messages.html" class="cat-btn">🌅 خواطر</a>
 
-<!-- ===== Container ===== -->
+<!-- Container -->
 <div class="container"></div>
 
-<!-- ===== Popup Add ===== -->
+<!-- Popup كتابة -->
 <div id="popup" class="popup">
   <div class="popup-box">
 
-    <img src="face10.jpg" class="popup-logo">
+    <h2 class="popup-title">✍️ عبّر عن إحساسك</h2>
+    <p class="popup-sub">اكتب ما بداخلك… فالكلمات لها روح ❤️</p>
 
-    <h3 class="now">✍️ اكتب قصيدتك</h3>
+    <input id="price" class="input" placeholder="📌 عنوان القصيدة">
 
-    <select id="poemCategory" class="category-select">
-      <option value="حب">❤️ حب</option>
-      <option value="حزن">😢 حزن</option>
-      <option value="خواطر">🌅 خواطر</option>
-      <option value="حكم">🧠 حكم</option>
-      <option value="شوق">🔥 شوق</option>
-    </select>
+    <textarea id="name" class="textarea" placeholder="ابدأ بكتابة قصيدتك هنا... لا تفكر كثيراً، فقط اكتب ✨"></textarea>
 
-    <textarea id="name" placeholder="اكتب القصيدة..."></textarea>
-    <input id="price" placeholder="عنوان القصيدة">
-
-    <button class="btn add" onclick="saveItem()">💾 حفظ</button>
-    <button class="btn" onclick="closePopup()">❌ إغلاق</button>
+    <div class="popup-actions">
+      <button class="btn publish" onclick="saveItem()">🚀 نشر القصيدة</button>
+      <button type="button" class="btn close" onclick="closePopup()">❌ إغلاق</button>
+    </div>
 
   </div>
-</div>
-
-<!-- ===== Notification ===== -->
-<div id="notify"></div>
-
-<!-- ===== Script ===== -->
+</div> <!-- 👈 دي كانت ناقصة -->
 <script type="module" src="script.js"></script>
 
-<!-- ===== Loader Hide ===== -->
 <script>
 window.onload = () => {
   document.getElementById("loader").style.display = "none";
+
+  // عرض الترحيب
+  const welcome = document.getElementById("welcomeBox");
+  if (!localStorage.getItem("welcomeShown")) {
+    welcome.style.display = "flex";
+    localStorage.setItem("welcomeShown", "true");
+  }
 };
+
+// إغلاق الترحيب
+function closeWelcome() {
+  document.getElementById("welcomeBox").style.display = "none";
+}
 </script>
-<h2>قصائد حب قصيرة</h2>
-<p>مجموعة من أجمل القصائد الرومانسية...</p>
+
 </body>
 </html>
