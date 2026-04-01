@@ -200,8 +200,8 @@ footer {
 /* ألوان */
 .love { background: linear-gradient(135deg, #ff4d6d, #ff758f); }
 .sad { background: linear-gradient(135deg, #334155, #1e293b); }
-.shawq { background: linear-gradient(135deg, #06b6d4, #0ea5e9); }
-.romantic { background: linear-gradient(135deg, #a855f7, #ec4899); }
+.shawq { background: linear-gradient(135deg, #06b6d4, #003a55); }
+.romantic { background: linear-gradient(135deg, #f75555, #ec4899); }
 
 /* ====== SEO TEXT ====== */
 .seo-text {
@@ -264,4 +264,40 @@ footer {
     white-space: nowrap;
   }
 
+}
+#poemBox p {
+  font-family: 'Amiri', serif;
+  font-size: 20px;       /* حجم الخط */
+  line-height: 1.6;      /* المسافة بين الأسطر */
+  white-space: pre-wrap;  /* يحافظ على الأسطر الجديدة ويكسر النص الطويل */
+  text-align: right;      /* لمحاذاة النص للجهة اليمنى */
+  color: #f1f5f9;         /* لون النص */
+  margin-bottom: 12px;    /* مسافة بين الفقرات */
+}
+#poemBox h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #06b6d4;
+}
+#poemBox p {
+  word-wrap: break-word;     /* يكسر الكلمات الطويلة */
+  overflow-wrap: break-word; /* احتياطي لبعض المتصفحات */
+  word-break: break-word;    /* احتياطي إضافي */
+  white-space: pre-line;     /* يحافظ على الأسطر الجديدة */
+}
+.back-btn {
+  display: inline-block;
+  margin: 15px;
+  padding: 10px 15px;
+  background: #2c5364;
+  color: white;
+  text-decoration: none; /* 🔥 يشيل الخط الأزرق */
+  border-radius: 8px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #1b2e3a;
 }
