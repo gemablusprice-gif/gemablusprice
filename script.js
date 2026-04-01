@@ -75,9 +75,29 @@ onAuthStateChanged(auth, (user) => {
 
 /* ===== تسجيل دخول ===== */
 window.login = async function () {
-  const provider = new GoogleAuthProvider();
-  await signInWithPopup(auth, provider);
-  alert("✅ تم تسجيل الدخول");
+  try {
+    const provider = new GoogleAuthProvider();
+
+    // 🔥 مهم: خليه ينتظر فعلاً
+    const result = await signInWithPopup(auth, provider);
+
+    if (!result.user) {
+      alert("❌ فشل تسجيل الدخول");
+      return;
+    }
+
+    alert("✅ تم تسجيل الدخول");
+
+    loadItems(); // تحديث البيانات بعد الدخول
+
+  } catch (e) {
+    console.log(e);
+
+    // 🔥 منع الوميض أو الإغلاق المفاجئ
+    if (e.code === "auth/popup-closed-by-user") return;
+
+    alert("❌ خطأ: " + e.message);
+  }
 };
 
 /* ===== popup ===== */
