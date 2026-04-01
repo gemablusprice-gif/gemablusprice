@@ -10,7 +10,6 @@
 <meta name="description" content="منصة عربية لكتابة ومشاركة القصائد والخواطر. عبّر عن إحساسك الآن.">
 
 <link rel="stylesheet" href="css.css">
-
 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 
 </head>
@@ -37,9 +36,10 @@
 
   <div class="actions">
     <button class="btn" onclick="login()">🔐 تسجيل دخول</button>
+
     <div class="online-box">
-  👀 <span id="onlineCount">0</span> متصل الآن
-</div>
+      👀 <span id="onlineCount">0</span> متصل الآن
+    </div>
   </div>
 </header>
 
@@ -49,15 +49,14 @@
   <p>منصة عربية تجمع كل من يحب الشعر ❤️</p>
   <button class="btn add" onclick="openAddPopup()">✍️ اكتب أول قصيدة لك الآن</button>
 </div>
-<!-- ===== Categories ===== -->
 
-<a href="love-poems.html" class="cat-btn">❤️ حب</a>
-
-<a href="sad-poems.html" class="cat-btn">😢 حزن</a>
-
-<a href="missing-messages.html" class="cat-btn">🔥 شوق</a>
-
-<a href="romantic-messages.html" class="cat-btn">🌅 خواطر</a>
+<!-- Categories -->
+<div class="categories">
+  <a href="love-poems.html" class="cat-btn">❤️ حب</a>
+  <a href="sad-poems.html" class="cat-btn">😢 حزن</a>
+  <a href="missing-messages.html" class="cat-btn">🔥 شوق</a>
+  <a href="romantic-messages.html" class="cat-btn">🌅 خواطر</a>
+</div>
 
 <!-- Container -->
 <div class="container"></div>
@@ -69,31 +68,37 @@
     <h2 class="popup-title">✍️ عبّر عن إحساسك</h2>
     <p class="popup-sub">اكتب ما بداخلك… فالكلمات لها روح ❤️</p>
 
+    <!-- عنوان -->
     <input id="price" class="input" placeholder="📌 عنوان القصيدة">
-    <select id="poemCategory" class="input">
-  <option value="حب">❤️ حب</option>
-  <option value="حزن">😢 حزن</option>
-  <option value="خواطر">🌅 خواطر</option>
-  <option value="شوق">🔥 شوق</option>
-</select>
-  
 
+    <!-- التصنيف -->
+    <select id="poemCategory" class="input">
+      <option value="حب">❤️ حب</option>
+      <option value="حزن">😢 حزن</option>
+      <option value="خواطر">🌅 خواطر</option>
+      <option value="شوق">🔥 شوق</option>
+    </select>
+
+    <!-- النص -->
     <textarea id="name" class="textarea" placeholder="ابدأ بكتابة قصيدتك هنا... لا تفكر كثيراً، فقط اكتب ✨"></textarea>
 
+    <!-- الأزرار -->
     <div class="popup-actions">
       <button class="btn publish" onclick="saveItem()">🚀 نشر القصيدة</button>
       <button type="button" class="btn close" onclick="closePopup()">❌ إغلاق</button>
     </div>
 
   </div>
-</div> <!-- 👈 دي كانت ناقصة -->
+</div>
+
+<!-- Firebase Script -->
 <script type="module" src="script.js"></script>
 
+<!-- Script بسيط -->
 <script>
 window.onload = () => {
   document.getElementById("loader").style.display = "none";
 
-  // عرض الترحيب
   const welcome = document.getElementById("welcomeBox");
   if (!localStorage.getItem("welcomeShown")) {
     welcome.style.display = "flex";
@@ -101,7 +106,6 @@ window.onload = () => {
   }
 };
 
-// إغلاق الترحيب
 function closeWelcome() {
   document.getElementById("welcomeBox").style.display = "none";
 }
