@@ -1,6 +1,5 @@
 /* ===== Firebase Imports ===== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
 import {
   getFirestore, collection, addDoc, getDocs,
   doc, updateDoc, increment,
@@ -8,7 +7,6 @@ import {
   setDoc, getDoc,
   orderBy, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
 import {
   getAuth, signInWithPopup, GoogleAuthProvider,
   onAuthStateChanged
@@ -25,12 +23,11 @@ const firebaseConfig = {
   appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b",
   measurementId: "G-86PJQG21C1"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-/* ===== عناصر ===== */
+/* ===== عناصر DOM ===== */
 let container, popup, userBox;
 let selectedCategory = "الكل";
 
@@ -47,47 +44,34 @@ window.addEventListener("DOMContentLoaded", async () => {
   /* ===== Online Users ===== */
   const userId = Date.now().toString();
 
-  await setDoc(doc(db, "onlineUsers", userId), {
-    time: Date.now()
-  });
+  await setDoc(doc(db, "onlineUsers", userId), { time: Date.now() });
+
+  setInterval(async () => {
+    await setDoc(doc(db, "onlineUsers", userId), { time: Date.now() });
+  }, 10000);
 
   window.addEventListener("beforeunload", async () => {
     await deleteDoc(doc(db, "onlineUsers", userId));
   });
 
   const onlineEl = document.getElementById("onlineCount");
-
-  onSnapshot(collection(db, "onlineUsers"), (snapshot) => {
-
-    if (onlineEl) {
-      onlineEl.innerText = snapshot.size;
-    }
-
-    // تنظيف المستخدمين الغير نشطين
+  onSnapshot(collection(db, "onlineUsers"), async (snapshot) => {
+    if (onlineEl) onlineEl.innerText = snapshot.size;
     const now = Date.now();
-
-    snapshot.forEach(docSnap => {
-      let data = docSnap.data();
-
-      if (now - data.time > 30000) {
-        deleteDoc(doc(db, "onlineUsers", docSnap.id));
-      }
-    });
-
+    const deletes = snapshot.docs
+      .filter(docSnap => now - docSnap.data().time > 30000)
+      .map(docSnap => deleteDoc(doc(db, "onlineUsers", docSnap.id)));
+    await Promise.all(deletes);
   });
-
 });
 
 /* ===== حالة المستخدم ===== */
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    userBox.innerText = "👤 " + user.displayName;
-  } else {
-    userBox.innerText = "غير مسجل";
-  }
+  if (user) userBox.innerText = "👤 " + user.displayName;
+  else userBox.innerText = "غير مسجل";
 });
 
-/* ===== تسجيل دخول ===== */
+/* ===== تسجيل دخول Google ===== */
 window.login = async function () {
   try {
     const provider = new GoogleAuthProvider();
@@ -121,17 +105,12 @@ window.closePopup = () => popup.style.display = "none";
 /* ===== اختيار القسم ===== */
 window.selectCategory = function (cat, el) {
   selectedCategory = cat;
-
-  document.querySelectorAll(".cat-btn").forEach(btn => {
-    btn.classList.remove("active");
-  });
-
+  document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
   el.classList.add("active");
-
   loadItems();
 };
 
-/* ===== حفظ ===== */
+/* ===== حفظ عنصر جديد ===== */
 window.saveItem = async function () {
   try {
     let poem = document.getElementById("name").value.trim();
@@ -142,7 +121,6 @@ window.saveItem = async function () {
       alert("سجل دخول الأول 🔐");
       return;
     }
-
     if (!poem || !title) {
       alert("اكتب البيانات ✍️");
       return;
@@ -159,10 +137,8 @@ window.saveItem = async function () {
     });
 
     alert("✅ تم الحفظ");
-
     document.getElementById("name").value = "";
     document.getElementById("price").value = "";
-
     closePopup();
     loadItems();
 
@@ -171,66 +147,81 @@ window.saveItem = async function () {
   }
 };
 
-/* ===== أزرار ===== */
+/* ===== أزرار Like / Smile مع منع التكرار ===== */
 function createLikeButton(data, id) {
   let btn = document.createElement("button");
+  btn.classList.add("like-btn");
+
+  // التحقق من الضغط مسبقاً
+  const likedPosts = JSON.parse(localStorage.getItem("likedPosts") || "[]");
+  let isLiked = likedPosts.includes(id);
+
   btn.innerHTML = `❤️ ${data.likes || 0}`;
+  if (isLiked) btn.disabled = true;
 
   btn.onclick = async () => {
-    await updateDoc(doc(db, "products", id), {
-      likes: increment(1)
-    });
-    data.likes++;
+    if (isLiked) return; // منع الضغط أكثر من مرة
+    await updateDoc(doc(db, "products", id), { likes: increment(1) });
+    data.likes = Number(data.likes || 0) + 1;
     btn.innerHTML = `❤️ ${data.likes}`;
+    btn.disabled = true;
+    likedPosts.push(id);
+    localStorage.setItem("likedPosts", JSON.stringify(likedPosts));
   };
-
   return btn;
 }
 
 function createSmileButton(data, id) {
   let btn = document.createElement("button");
+  btn.classList.add("smile-btn");
+
+  const smiledPosts = JSON.parse(localStorage.getItem("smiledPosts") || "[]");
+  let isSmiled = smiledPosts.includes(id);
+
   btn.innerHTML = `😊 ${data.smiles || 0}`;
+  if (isSmiled) btn.disabled = true;
 
   btn.onclick = async () => {
-    await updateDoc(doc(db, "products", id), {
-      smiles: increment(1)
-    });
-    data.smiles++;
+    if (isSmiled) return;
+    await updateDoc(doc(db, "products", id), { smiles: increment(1) });
+    data.smiles = Number(data.smiles || 0) + 1;
     btn.innerHTML = `😊 ${data.smiles}`;
+    btn.disabled = true;
+    smiledPosts.push(id);
+    localStorage.setItem("smiledPosts", JSON.stringify(smiledPosts));
   };
-
   return btn;
 }
 
-/* ===== حذف ===== */
+/* ===== حذف عنصر ===== */
 window.deleteItem = async function (id) {
   if (!confirm("متأكد؟")) return;
-
   await deleteDoc(doc(db, "products", id));
   loadItems();
 };
 
-/* ===== عرض ===== */
+/* ===== تحميل وعرض العناصر ===== */
+/* ===== تحميل وعرض العناصر ===== */
 async function loadItems() {
   if (!container) return;
-
   container.innerHTML = "⏳ جاري التحميل...";
 
-  let q;
-
-  if (selectedCategory === "الكل") {
-    q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-  } else {
-    q = query(
-      collection(db, "products"),
-      where("category", "==", selectedCategory),
-      orderBy("createdAt", "desc")
-    );
-  }
+  // 🔹 جلب البيانات
+  let q = selectedCategory === "الكل"
+    ? query(collection(db, "products"), orderBy("likes", "desc"))
+    : query(
+        collection(db, "products"),
+        where("category", "==", selectedCategory),
+        orderBy("likes", "desc")
+      );
 
   const snap = await getDocs(q);
-
   container.innerHTML = "";
+
+  if (snap.empty) {
+    container.innerHTML = "<p style='text-align:center;margin-top:20px;'>لا توجد قصائد لعرضها 😔</p>";
+    return;
+  }
 
   snap.forEach(docSnap => {
     let data = docSnap.data();
@@ -242,17 +233,17 @@ async function loadItems() {
     div.innerHTML = `
       <a href="poem.html?id=${id}">
         <h3>${data.price}</h3>
-        <p>${data.name.substring(0, 120)}...</p>
+        <p>${data.name.substring(0, 120)}${data.name.length > 120 ? "..." : ""}</p>
       </a>
     `;
 
     let actions = document.createElement("div");
+    actions.className = "actions";
 
-    actions.append(
-      createLikeButton(data, id),
-      createSmileButton(data, id)
-    );
+    // أزرار Like و Smile
+    actions.append(createLikeButton(data, id), createSmileButton(data, id));
 
+    // زر الحذف فقط للكاتب
     if (auth.currentUser && auth.currentUser.uid === data.uid) {
       let del = document.createElement("button");
       del.innerText = "🗑 حذف";
@@ -265,28 +256,22 @@ async function loadItems() {
   });
 }
 
-/* ===== Views ===== */
+/* ===== تحديث عدد الزيارات ===== */
 async function updateViews() {
   try {
     const ref = doc(db, "stats", "visits");
-
-    await updateDoc(ref, {
-      count: increment(1)
-    }).catch(async () => {
+    await updateDoc(ref, { count: increment(1) }).catch(async () => {
       await setDoc(ref, { count: 1 });
     });
-
     const snap = await getDoc(ref);
-
     const el = document.getElementById("viewsCount");
     if (el) el.innerText = snap.data().count;
-
   } catch (e) {
     console.log(e);
   }
 }
 
-/* ===== منشوراتي ===== */
+/* ===== عرض منشوراتي ===== */
 window.myPosts = async function () {
   if (!auth.currentUser) {
     alert("سجل دخول الأول");
@@ -294,22 +279,18 @@ window.myPosts = async function () {
   }
 
   container.innerHTML = "";
-
   const snap = await getDocs(collection(db, "products"));
 
   snap.forEach(docSnap => {
     let data = docSnap.data();
-
     if (data.uid !== auth.currentUser.uid) return;
 
     let div = document.createElement("div");
     div.className = "item";
-
     div.innerHTML = `
       <h3>${data.price}</h3>
       <p>${data.name}</p>
     `;
-
     container.appendChild(div);
   });
 };
