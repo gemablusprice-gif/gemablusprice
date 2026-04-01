@@ -1,105 +1,326 @@
-/* ====== RESET ====== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* ====== BODY ====== */
-body {
   font-family: 'Amiri', serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+  color: white;
   direction: rtl;
-
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: #f1f5f9;
 }
 
-/* ====== LOADER ====== */
-#loader {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#0f172a;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:20px;
-  z-index:9999;
-}
-
-/* ====== HEADER ====== */
+/* Header */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-
-  padding: 15px 20px;
-
-  background: linear-gradient(135deg, #06b6d4, #2563eb);
+  padding: 20px;
+  text-align: center;
+  background: rgba(2,6,23,0.8);
   backdrop-filter: blur(10px);
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-
-  border-radius: 0 0 20px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
 }
 
 .logo-text {
-  color: #fff;
+  font-size: 34px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #38bdf8;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 30px;
+}
+
+.hero h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  color: #cbd5f5;
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: white;
+  cursor: pointer;
+}
+
+.btn.add {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+/* Cards */
+.container {
+  padding: 15px;
+}
+
+/* ===== Card ===== */
+.item {
+  background: rgba(15,23,42,0.75);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  transition: 0.3s;
+
+  line-height: 1.9;
+}
+
+/* Hover خفيف مش مزعج */
+.item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+/* ===== Title ===== */
+.item h3 {
   font-size: 22px;
   font-weight: bold;
+  color: #38bdf8;
+  margin-bottom: 10px;
 }
 
-/* ====== USER ====== */
-#userBox {
-  font-size: 13px;
-  color: #fff;
+/* ===== Text ===== */
+.item p {
+  font-size: 17px;
+  color: #f1f5f9; /* 🔥 أوضح */
+  line-height: 2.1;
+  letter-spacing: 0.3px;
 }
 
-/* ====== BUTTONS ====== */
-.btn {
+/* ===== Buttons ===== */
+.item button {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
   border: none;
-  padding: 8px 14px;
-  border-radius: 25px;
+  background: rgba(255,255,255,0.08);
+  color: white;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.btn:hover {
-  transform: scale(1.1);
+.item button:hover {
+  background: #ef4444;
 }
 
-.login {
-  background: #fff;
-  color: #111;
+/* ===== Responsive (مهم جدًا) ===== */
+@media (max-width: 768px) {
+  .item {
+    padding: 16px;
+  }
+
+  .item h3 {
+    font-size: 18px;
+  }
+
+  .item p {
+    font-size: 15px;
+  }
+}
+/* Popup */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: none; /* 👈 لازم ده بس */
+
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  z-index: 999;
 }
 
-.add {
-  background: gold;
-  color: #111;
-  font-weight: bold;
+.popup-box {
+  width: 90%;
+  max-width: 500px;
+
+  background: rgba(15,23,42,0.9);
+  padding: 25px;
+  border-radius: 25px;
+
+  box-shadow: 0 0 30px rgba(56,189,248,0.3);
+  animation: popupFade 0.4s ease;
 }
 
-/* ====== CATEGORIES ====== */
-.categories {
+/* عنوان */
+.popup-title {
+  text-align: center;
+  color: #38bdf8;
+  margin-bottom: 5px;
+}
+
+/* وصف */
+.popup-sub {
+  text-align: center;
+  font-size: 14px;
+  color: #cbd5f5;
+  margin-bottom: 20px;
+}
+
+/* الحقول */
+.input, .textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px;
+
+  border-radius: 15px;
+  border: none;
+
+  background: rgba(255,255,255,0.05);
+  color: white;
+
+  outline: none;
+  transition: 0.3s;
+}
+
+.input:focus, .textarea:focus {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 10px #38bdf8;
+}
+
+/* التكست اريا */
+.textarea {
+  height: 120px;
+  resize: none;
+}
+
+/* الأزرار */
+.popup-actions {
   display: flex;
+  justify-content: space-between;
   gap: 10px;
-  padding: 10px;
-  overflow-x: auto;
 }
 
+/* زر النشر */
+.publish {
+  flex: 1;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border: none;
+  padding: 12px;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.publish:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #38bdf8;
+}
+
+/* زر الإغلاق */
+.close {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  padding: 12px;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+/* أنيميشن */
+@keyframes popupFade {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* زر ابدأ الآن */
+.hero .btn.add {
+  font-size: 20px;
+  padding: 15px 30px;
+  border-radius: 30px;
+
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: white;
+  border: none;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  animation: pulse 2s infinite;
+  transition: 0.3s;
+}
+
+/* توهج */
+.hero .btn.add::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+
+  transition: 0.5s;
+}
+
+.hero .btn.add:hover::before {
+  left: 100%;
+}
+
+/* عند المرور */
+.hero .btn.add:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px #38bdf8;
+}
+
+/* نبض */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56,189,248,0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(56,189,248,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56,189,248,0);
+  }
+}
+.online-box {
+  background: rgba(0,0,0,0.3);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
 .cat-btn {
   border: none;
   padding: 8px 16px;
   border-radius: 30px;
 
-  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  background: linear-gradient(135deg, #235a999f, #012868b4);
   color: #fff;
+  font-size: large;
+  padding: 9px 30px;
 
   cursor: pointer;
   white-space: nowrap;
@@ -113,198 +334,6 @@ body {
 .cat-btn.active {
   background: linear-gradient(45deg, gold, orange);
   color: #000;
-}
-
-/* ====== CONTAINER ====== */
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
-  gap: 15px;
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-/* ====== CARD ====== */
-.item {
-  background: rgba(82, 94, 112, 0.212);
-  backdrop-filter: blur(10px);
-
-  padding: 15px;
-  border-radius: 20px;
-  text-align: center;
-
-  transition: 0.3s;
-}
-
-.item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-/* ====== TEXT ====== */
-.item p {
-  color: #f8fafc;
-  font-size: 22px;
-  line-height: 2;
-  text-align: right;
-  white-space: pre-line;
-
-  background: rgba(2, 10, 56, 0.301);
-  padding: 12px;
-  border-radius: 12px;
-
-  border-right: 3px solid #06b6d4;
-
-  text-shadow: 0 0 5px rgba(0,0,0,0.5);
-}
-.item h3 {
-    font-size: 18px;
-  }
-/* ====== ACTIONS ====== */
-.actions-row {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-/* ❤️ LIKE */
-.like-btn {
-  background: rgba(255,255,255,0.08);
-  color: #ff4d6d;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 20px;
-}
-
-/* 😊 SMILE */
-.smile-btn {
-  background: rgba(255,255,255,0.08);
-  color: #facc15;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 20px;
-}
-
-/* ====== POPUP ====== */
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  background: rgba(0,0,0,0.8);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-box {
-  background: #011c49;
-  padding: 20px;
-  border-radius: 20px;
-  width: 350px;
-  max-width: 90%;
-  text-align: center;
-}
-
-.popup-logo {
-  width: 120px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-}
-
-.popup-box textarea,
-.popup-box input,
-.category-select {
-  width: 100%;
-  margin: 8px 0;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-}
-
-/* ====== VIEWS ====== */
-.views-box {
-  background: linear-gradient(135deg, #020617, #0f172a);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 50px;
-  margin: 15px auto;
-  width: fit-content;
-}
-
-#viewsCount {
-  color: #06b6d4;
-  font-weight: bold;
-}
-
-/* ====== RESPONSIVE ====== */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .container {
-    grid-template-columns: 1fr;
-  }
-}
-.views1 {
-    background: linear-gradient(135deg, #020617, #0f172a);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 50px;
-  margin: 15px auto;
-  width: fit-content;
-}
-
-#viewsCount {
-  color: #06b6d4;
-  font-weight: bold;
-}
-
-/* ====== RESPONSIVE ====== */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .container {
-    grid-template-columns: 1fr;
-  }
-}
-/* ===== باقي CSS للموقع ===== 
-/* ===== أزرار Like و Smile - شكل متناسق ===== */
-.container .item .actions button {
-    margin: 5px 6px;
-    padding: 6px 12px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: 0.2s;
-    background: rgba(255,255,255,0.1); /* شفاف قليلاً ليناسب الخلفية */
-    color: #fff; /* اللون الافتراضي أبيض */
-}
-
-/* تغير اللون عند المرور بالماوس */
-.container .item .actions button:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-/* زر Like */
-button.like-btn {
-    color: #ff4d6d; /* لون القلب */
-}
-
-/* زر Smile */
-button.smile-btn {
-    color: #facc15; /* لون الابتسامة */
 }
 a {
   text-decoration: none;   /* يشيل الخط */
