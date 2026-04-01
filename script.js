@@ -21,10 +21,14 @@ import {
 
 /* ===== Firebase Config ===== */
 const firebaseConfig = {
-  apiKey: "AIzaSyAjHSw...",
+  apiKey: "AIzaSyAjHSw-cDIn5Exn2zM7s2-l-_dNdwZiH6E",
   authDomain: "gemablusprice-a2663.firebaseapp.com",
   databaseURL: "https://gemablusprice-a2663-default-rtdb.firebaseio.com",
   projectId: "gemablusprice-a2663",
+  storageBucket: "gemablusprice-a2663.firebasestorage.app",
+  messagingSenderId: "922754795410",
+  appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b",
+  measurementId: "G-86PJQG21C1"
 };
 
 const app = initializeApp(firebaseConfig);
