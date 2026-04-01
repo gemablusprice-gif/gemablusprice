@@ -252,3 +252,69 @@ body {
     grid-template-columns: 1fr;
   }
 }
+.views1 {
+    background: linear-gradient(135deg, #020617, #0f172a);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin: 15px auto;
+  width: fit-content;
+}
+
+#viewsCount {
+  color: #06b6d4;
+  font-weight: bold;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===== باقي CSS للموقع ===== 
+/* ===== أزرار Like و Smile - شكل متناسق ===== */
+.container .item .actions button {
+    margin: 5px 6px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.2s;
+    background: rgba(255,255,255,0.1); /* شفاف قليلاً ليناسب الخلفية */
+    color: #fff; /* اللون الافتراضي أبيض */
+}
+
+/* تغير اللون عند المرور بالماوس */
+.container .item .actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* زر Like */
+button.like-btn {
+    color: #ff4d6d; /* لون القلب */
+}
+
+/* زر Smile */
+button.smile-btn {
+    color: #facc15; /* لون الابتسامة */
+}
+a {
+  text-decoration: none;   /* يشيل الخط */
+  color: inherit;          /* يخلي نفس لون النص */
+}
+
+a:focus,
+a:active,
+a:visited {
+  text-decoration: none;
+  outline: none;           /* يشيل الإطار الأزرق */
+  color: inherit;
+}
