@@ -116,7 +116,6 @@ window.saveItem = async function () {
   let titleEl = document.getElementById("price");
   let catEl = document.getElementById("poemCategory");
 
-  // 🔴 تحقق من وجود العناصر
   if (!poemEl || !titleEl || !catEl) {
     alert("❌ في عنصر ناقص في الصفحة");
     return;
@@ -126,20 +125,17 @@ window.saveItem = async function () {
   let title = titleEl.value.trim();
   let category = catEl.value;
 
-  // 🔴 تحقق تسجيل الدخول
   if (!auth.currentUser) {
     alert("⚠️ لازم تسجل دخول الأول");
     return;
   }
 
-  // 🔴 تحقق البيانات
   if (!poem || !title) {
     alert("⚠️ اكتب القصيدة والعنوان");
     return;
   }
 
   try {
-    // 🔥 إضافة في فايربيس
     await addDoc(collection(db, "products"), {
       name: poem,
       price: title,
@@ -151,6 +147,11 @@ window.saveItem = async function () {
     });
 
     alert("✅ تم نشر القصيدة");
+
+    // 🔥 امسح الحفظ التلقائي هنا 👇
+    localStorage.removeItem("poem");
+    localStorage.removeItem("title");
+    localStorage.removeItem("category");
 
     // 🔥 تنظيف الحقول
     poemEl.value = "";
@@ -293,4 +294,36 @@ async function updateViews() {
 
   const snap = await getDoc(ref);
   document.getElementById("viewsCount").innerText = snap.data().count;
+}
+/* ===== 🔥 Auto Save ===== */
+
+// عناصر
+const poemInput = document.getElementById("name");
+const titleInput = document.getElementById("price");
+const categoryInput = document.getElementById("poemCategory");
+
+// 🔹 تحميل البيانات المحفوظة
+window.addEventListener("DOMContentLoaded", () => {
+  if (poemInput) poemInput.value = localStorage.getItem("poem") || "";
+  if (titleInput) titleInput.value = localStorage.getItem("title") || "";
+  if (categoryInput) categoryInput.value = localStorage.getItem("category") || "حب";
+});
+
+// 🔹 حفظ تلقائي أثناء الكتابة
+if (poemInput) {
+  poemInput.addEventListener("input", () => {
+    localStorage.setItem("poem", poemInput.value);
+  });
+}
+
+if (titleInput) {
+  titleInput.addEventListener("input", () => {
+    localStorage.setItem("title", titleInput.value);
+  });
+}
+
+if (categoryInput) {
+  categoryInput.addEventListener("change", () => {
+    localStorage.setItem("category", categoryInput.value);
+  });
 }
