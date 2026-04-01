@@ -118,7 +118,34 @@ async function loadItems() {
     container.appendChild(div);
   });
 }
+snap.forEach(docSnap => {
+  let data = docSnap.data();
+  let id = docSnap.id;
 
+  let div = document.createElement("div");
+  div.className = "item";
+
+  div.innerHTML = `
+    <h3>${data.price}</h3>
+    <p>${data.name}</p>
+  `;
+
+  // 🔥 زر لايك
+  let likeBtn = document.createElement("button");
+  likeBtn.innerText = `❤️ ${data.likes || 0}`;
+
+  likeBtn.onclick = async () => {
+    await updateDoc(doc(db, "products", id), {
+      likes: increment(1)
+    });
+
+    data.likes = (data.likes || 0) + 1;
+    likeBtn.innerText = `❤️ ${data.likes}`;
+  };
+
+  div.appendChild(likeBtn);
+  container.appendChild(div);
+});
 /* ===== زيارات ===== */
 async function updateViews() {
   const refDoc = doc(db, "stats", "visits");
