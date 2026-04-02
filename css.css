@@ -15,7 +15,7 @@ body {
 .header {
   padding: 20px;
   text-align: center;
-  background: rgba(2,6,23,0.8);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
 }
 
@@ -67,9 +67,9 @@ body {
   backdrop-filter: blur(8px);
   padding: 20px;
   margin-bottom: 18px;
-  border-radius: 18px;
+  border-radius: 18px 70px;
 
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.582);
 
   box-shadow: 0 6px 20px rgba(0,0,0,0.5);
   transition: 0.3s;
@@ -142,7 +142,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background: rgba(0,0,0,0.6);
+  background: rgba(13, 78, 218, 0.6);
   backdrop-filter: blur(8px);
   z-index: 999;
 }
@@ -151,7 +151,7 @@ body {
   width: 90%;
   max-width: 500px;
 
-  background: rgba(15,23,42,0.9);
+  background: rgba(0, 76, 255, 0.9);
   padding: 25px;
   border-radius: 25px;
 
@@ -297,7 +297,7 @@ body {
 /* نبض */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(56,189,248,0.7);
+    box-shadow: 0 0 0 0 rgba(248, 229, 56, 0.7);
   }
   70% {
     box-shadow: 0 0 0 15px rgba(56,189,248,0);
@@ -314,26 +314,56 @@ body {
 }
 .cat-btn {
   border: none;
-  padding: 8px 16px;
+  padding: 5px 20px;
   border-radius: 30px;
 
-  background: linear-gradient(135deg, #235a999f, #012868b4);
+  background: linear-gradient(135deg, #235a99, #012868);
   color: #fff;
-  font-size: large;
-  padding: 5px 10px;
+  font-size: 15px;
+  font-weight: 600;
 
   cursor: pointer;
   white-space: nowrap;
-  transition: 0.3s;
-}
 
+  position: relative;
+  overflow: hidden;
+
+  /* ✨ عمق */
+  box-shadow: 
+    0 2px 5px rgba(5, 13, 83, 0.829),
+    inset 0 1px 0 rgb(255, 153, 0);
+
+  transition: all 0.25s ease;
+
+  /* 🔥 اهتزاز خفيف */
+  animation: shakeBtn 4s ease infinite;
+}
+/* 🖱️ Hover */
 .cat-btn:hover {
-  transform: scale(1.1);
+  transform: translateY(-4px) scale(1.04);
+
+  box-shadow: 
+    0 10px 25px rgba(0,0,0,0.5),
+    0 0 15px rgba(59,130,246,0.3);
+
+  animation: none; /* ❗ يوقف الاهتزاز أثناء التفاعل */
 }
 
+.cat-btn:hover::before {
+  left: 120%;
+}
+
+/* 👇 ضغط */
+.cat-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 8px rgb(0, 247, 255);
+}
+
+/* 🔥 الزر النشط */
 .cat-btn.active {
-  background: linear-gradient(45deg, gold, orange);
-  color: #000;
+  box-shadow: 
+    0 0 15px rgba(255,215,0,0.6),
+    0 5px 20px rgba(0,0,0,0.5);
 }
 a {
   text-decoration: none;   /* يشيل الخط */
