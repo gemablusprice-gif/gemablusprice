@@ -142,7 +142,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background: rgba(13, 78, 218, 0.6);
+  background: rgba(35, 50, 73, 0);
   backdrop-filter: blur(8px);
   z-index: 999;
 }
@@ -151,11 +151,11 @@ body {
   width: 90%;
   max-width: 500px;
 
-  background: rgba(0, 76, 255, 0.9);
+  background: rgba(44, 61, 85, 0.699);
   padding: 25px;
   border-radius: 25px;
 
-  box-shadow: 0 0 30px rgba(56,189,248,0.3);
+  box-shadow: 0 0 30px rgba(0, 179, 255, 0.096);
   animation: popupFade 0.4s ease;
 }
 
