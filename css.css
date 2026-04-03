@@ -1,3 +1,4 @@
+/* ===== Reset ===== */
 * {
   margin: 0;
   padding: 0;
@@ -5,44 +6,48 @@
   font-family: 'Amiri', serif;
 }
 
+/* ===== Body ===== */
 body {
   background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
   color: white;
   direction: rtl;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
-/* Header */
+/* ===== Header ===== */
 .header {
   padding: 20px;
   text-align: center;
-  background: url("https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+  background: url("https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=1170&auto=format&fit=crop");
   backdrop-filter: blur(10px);
 }
 
 .logo-text {
-  font-size: 34px;
+  font-size: clamp(22px, 5vw, 34px);
   font-weight: bold;
   margin-bottom: 10px;
   color: #38bdf8;
 }
 
-/* Hero */
+/* ===== Hero ===== */
 .hero {
   text-align: center;
   padding: 30px;
 }
 
 .hero h2 {
-  font-size: 28px;
+  font-size: clamp(18px, 4vw, 28px);
   margin-bottom: 10px;
 }
 
 .hero p {
+  font-size: clamp(14px, 3vw, 18px);
   color: #cbd5f5;
   margin-bottom: 15px;
 }
 
-/* Buttons */
+/* ===== Buttons ===== */
 .btn {
   padding: 10px 16px;
   border: none;
@@ -50,13 +55,45 @@ body {
   background: linear-gradient(135deg, #06b6d4, #3b82f6);
   color: white;
   cursor: pointer;
+  font-size: clamp(14px, 3vw, 16px);
 }
 
 .btn.add {
   background: linear-gradient(135deg, #22c55e, #16a34a);
 }
 
-/* Cards */
+/* ===== زر ابدأ الآن ===== */
+.hero .btn.add {
+  font-size: clamp(16px, 4vw, 20px);
+  padding: 15px 30px;
+  border-radius: 30px;
+  animation: pulse 2s infinite;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero .btn.add::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  transition: 0.5s;
+}
+
+.hero .btn.add:hover::before {
+  left: 100%;
+}
+
+.hero .btn.add:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px #38bdf8;
+}
+
+/* ===== Container ===== */
 .container {
   padding: 15px;
 }
@@ -68,16 +105,11 @@ body {
   padding: 20px;
   margin-bottom: 18px;
   border-radius: 18px 40px;
-
-  border: 1px solid rgba(255, 255, 255, 0.582);
-
+  border: 1px solid rgba(255,255,255,0.5);
   box-shadow: 0 6px 20px rgba(0,0,0,0.5);
   transition: 0.3s;
-
-  line-height: 1.9;
 }
 
-/* Hover خفيف مش مزعج */
 .item:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 30px rgba(0,0,0,0.7);
@@ -85,21 +117,21 @@ body {
 
 /* ===== Title ===== */
 .item h3 {
-  font-size: 22px;
+  font-size: clamp(18px, 4vw, 22px);
   font-weight: bold;
   color: #38bdf8;
   margin-bottom: 10px;
 }
 
-/* ===== Text ===== */
+/* ===== Text (🔥 أهم تعديل) ===== */
 .item p {
-  font-size: 50px;
-  color: #f1f5f9; /* 🔥 أوضح */
+  font-size: clamp(16px, 4vw, 22px);
+  color: #f1f5f9;
   line-height: 2.1;
   letter-spacing: 0.3px;
 }
 
-/* ===== Buttons ===== */
+/* ===== Buttons inside card ===== */
 .item button {
   margin-top: 12px;
   padding: 8px 12px;
@@ -115,34 +147,16 @@ body {
   background: #ef4444;
 }
 
-/* ===== Responsive (مهم جدًا) ===== */
-@media (max-width: 768px) {
-  .item {
-    padding: 16px;
-  }
-
-  .item h3 {
-    font-size: 18px;
-  }
-
-  .item p {
-    font-size: 15px;
-  }
-}
-/* Popup */
+/* ===== Popup ===== */
 .popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
-  display: none; /* 👈 لازم ده بس */
-
+  display: none;
   justify-content: center;
   align-items: center;
-
-  background: rgba(35, 50, 73, 0);
   backdrop-filter: blur(8px);
   z-index: 999;
 }
@@ -150,23 +164,18 @@ body {
 .popup-box {
   width: 90%;
   max-width: 500px;
-
-  background: rgba(44, 61, 85, 0.699);
+  background: rgba(44,61,85,0.7);
   padding: 25px;
   border-radius: 25px;
-
-  box-shadow: 0 0 30px rgba(0, 179, 255, 0.096);
   animation: popupFade 0.4s ease;
 }
 
-/* عنوان */
 .popup-title {
   text-align: center;
   color: #38bdf8;
   margin-bottom: 5px;
 }
 
-/* وصف */
 .popup-sub {
   text-align: center;
   font-size: 14px;
@@ -174,209 +183,45 @@ body {
   margin-bottom: 20px;
 }
 
-/* الحقول */
 .input, .textarea {
   width: 100%;
   margin-bottom: 15px;
   padding: 12px;
-
   border-radius: 15px;
   border: none;
-
-  background:  rgba(0, 0, 0, 0.11);
+  background: rgba(0,0,0,0.2);
   color: white;
-
-  outline: none;
-  transition: 0.3s;
 }
 
-.input:focus, .textarea:focus {
-  background: rgba(255,255,255,0.1);
-  box-shadow: 0 0 10px #38bdf8;
-}
-
-/* التكست اريا */
 .textarea {
   height: 120px;
   resize: none;
 }
 
-/* الأزرار */
+/* ===== Popup buttons ===== */
 .popup-actions {
   display: flex;
-  justify-content: space-between;
   gap: 10px;
 }
 
-/* زر النشر */
+.publish, .close {
+  flex: 1;
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
 .publish {
-  flex: 1;
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  border: none;
-  padding: 12px;
-  border-radius: 20px;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
-.publish:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #38bdf8;
-}
-
-/* زر الإغلاق */
 .close {
-  flex: 1;
   background: rgba(255,255,255,0.1);
-  border: none;
-  padding: 12px;
-  border-radius: 20px;
-  color: white;
-  cursor: pointer;
 }
 
-/* أنيميشن */
-@keyframes popupFade {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-/* زر ابدأ الآن */
-.hero .btn.add {
-  font-size: 20px;
-  padding: 15px 30px;
-  border-radius: 30px;
-
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  color: white;
-  border: none;
-
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  animation: pulse 2s infinite;
-  transition: 0.3s;
-}
-
-/* توهج */
-.hero .btn.add::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.5),
-    transparent
-  );
-
-  transition: 0.5s;
-}
-
-.hero .btn.add:hover::before {
-  left: 100%;
-}
-
-/* عند المرور */
-.hero .btn.add:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px #38bdf8;
-}
-
-/* نبض */
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(248, 229, 56, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(56,189,248,0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(56,189,248,0);
-  }
-}
-.online-box {
-  background: rgba(0,0,0,0.3);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-}
-.cat-btn {
-  border: none;
-  padding: 5px 20px;
-  border-radius: 30px;
-
-  background: linear-gradient(135deg, #235a99, #012868);
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-
-  cursor: pointer;
-  white-space: nowrap;
-
-  position: relative;
-  overflow: hidden;
-
-  /* ✨ عمق */
-  box-shadow: 
-    0 2px 5px rgba(5, 13, 83, 0.829),
-    inset 0 1px 0 rgb(255, 153, 0);
-
-  transition: all 0.25s ease;
-
-  /* 🔥 اهتزاز خفيف */
-  animation: shakeBtn 4s ease infinite;
-}
-/* 🖱️ Hover */
-.cat-btn:hover {
-  transform: translateY(-4px) scale(1.04);
-
-  box-shadow: 
-    0 10px 25px rgba(0,0,0,0.5),
-    0 0 15px rgba(59,130,246,0.3);
-
-  animation: none; /* ❗ يوقف الاهتزاز أثناء التفاعل */
-}
-
-.cat-btn:hover::before {
-  left: 120%;
-}
-
-/* 👇 ضغط */
-.cat-btn:active {
-  transform: scale(0.96);
-  box-shadow: 0 3px 8px rgb(0, 247, 255);
-}
-
-/* 🔥 الزر النشط */
-.cat-btn.active {
-  box-shadow: 
-    0 0 15px rgba(255,215,0,0.6),
-    0 5px 20px rgba(0,0,0,0.5);
-}
-a {
-  text-decoration: none;   /* يشيل الخط */
-  color: inherit;          /* يخلي نفس لون النص */
-}
-
-a:focus,
-a:active,
-a:visited {
-  text-decoration: none;
-  outline: none;           /* يشيل الإطار الأزرق */
-  color: inherit;
-}
+/* ===== Search ===== */
 .search-box {
   padding: 15px;
   text-align: center;
@@ -389,10 +234,6 @@ a:visited {
   border: none;
 }
 
-#searchResults {
-  margin-top: 10px;
-}
-
 .user-result {
   background: #1e293b;
   padding: 10px;
@@ -401,25 +242,31 @@ a:visited {
   cursor: pointer;
 }
 
-.user-result:hover {
-  background: #334155;
+/* ===== Links ===== */
+a {
+  text-decoration: none;
+  color: inherit;
 }
-/* للموبايل */
+
+/* ===== Animations ===== */
+@keyframes popupFade {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(56,189,248,0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(56,189,248,0); }
+  100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+}
+
+/* ===== Mobile تحسين إضافي ===== */
 @media (max-width: 768px) {
   body {
-    font-size: 22px;
+    font-size: 16px;
   }
 
-  h1 {
-    font-size: 22px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  p {
-    font-size: 17px;
-    line-height: 1.8;
+  .item {
+    padding: 16px;
   }
 }
