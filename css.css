@@ -67,7 +67,7 @@ body {
   backdrop-filter: blur(8px);
   padding: 20px;
   margin-bottom: 18px;
-  border-radius: 18px 70px;
+  border-radius: 18px 40px;
 
   border: 1px solid rgba(255, 255, 255, 0.582);
 
@@ -376,4 +376,31 @@ a:visited {
   text-decoration: none;
   outline: none;           /* يشيل الإطار الأزرق */
   color: inherit;
+}
+.search-box {
+  padding: 15px;
+  text-align: center;
+}
+
+#searchInput {
+  width: 90%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+#searchResults {
+  margin-top: 10px;
+}
+
+.user-result {
+  background: #1e293b;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.user-result:hover {
+  background: #334155;
 }
