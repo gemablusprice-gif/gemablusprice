@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>بروفايل المستخدم</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- 🔙 رجوع -->
+  <button class="back-btn" onclick="goHome()">⬅️ رجوع</button>
+
+  <!-- 🖼️ غلاف -->
+  <div class="cover"></div>
+
+  <!-- 👤 البروفايل -->
+  <div class="profile-card">
+
+    <!-- 📛 الاسم -->
+    <h2 id="username">...</h2>
+
+    <p id="email"></p>
+
+    <p>👥 المتابعين: <span id="followers">0</span></p>
+
+    <!-- ✏️ تعديل الاسم -->
+     <div id="editBox" class="edit-box">
+  <input type="text" id="nameInput" placeholder="اكتب اسمك..." />
+  <button onclick="saveName()">💾 حفظ</button>
+</div>
+
+    <button id="followBtn">➕ متابعة</button>
+
+  </div>
+
+  <!-- 📊 الإحصائيات -->
+  <div class="stats">
+    <p>📜 <span id="postCount">0</span></p>
+    <p>❤️ <span id="totalLikes">0</span></p>
+  </div>
+
+  <!-- 📜 القصائد -->
+  <h3 class="title">📜 القصائد</h3>
+  <div id="myPosts"></div>
+
+</div>
+
+<script type="module" src="profile-script.js"></script>
+
+</body>
+</html>
