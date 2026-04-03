@@ -4,7 +4,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getFirestore, collection, addDoc, getDocs,
   doc, updateDoc, increment,
-  query, where, deleteDoc,
+  query, deleteDoc,
   setDoc, getDoc,
   orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -14,7 +14,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-/* 🔥 Realtime */
 import {
   getDatabase, ref, set, onDisconnect, onValue
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -25,10 +24,6 @@ const firebaseConfig = {
   authDomain: "gemablusprice-a2663.firebaseapp.com",
   databaseURL: "https://gemablusprice-a2663-default-rtdb.firebaseio.com",
   projectId: "gemablusprice-a2663",
-  storageBucket: "gemablusprice-a2663.firebasestorage.app",
-  messagingSenderId: "922754795410",
-  appId: "1:922754795410:web:4c4f3e73e4ac4c9008a34b",
-  measurementId: "G-86PJQG21C1"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -36,30 +31,9 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const dbRT = getDatabase(app);
 
-/* ===== عناصر DOM ===== */
+/* ===== متغيرات ===== */
 let container, popup, userBox;
-let selectedCategory = "الكل";
-
-/* ===== 🔥 Online System ===== */
-const userId = Date.now().toString();
-const userRef = ref(dbRT, "onlineUsers/" + userId);
-
-// دخول
-set(userRef, true);
-
-// خروج
-onDisconnect(userRef).remove();
-
-// قراءة العدد
-const countRef = ref(dbRT, "onlineUsers");
-
-onValue(countRef, (snapshot) => {
-  const data = snapshot.val();
-  const count = data ? Object.keys(data).length : 0;
-
-  const el = document.getElementById("onlineCount");
-  if (el) el.innerText = count;
-});
+let currentUser = null;
 
 /* ===== تحميل الصفحة ===== */
 window.addEventListener("DOMContentLoaded", () => {
@@ -68,176 +42,125 @@ window.addEventListener("DOMContentLoaded", () => {
   popup = document.getElementById("popup");
   userBox = document.getElementById("userBox");
 
+  /* 🔍 البحث */
+  const searchInput = document.getElementById("searchInput");
+  const resultsBox = document.getElementById("searchResults");
+
+  if (searchInput && resultsBox) {
+    searchInput.addEventListener("input", async () => {
+
+      const value = searchInput.value.toLowerCase().trim();
+
+      if (!value) {
+        resultsBox.innerHTML = "";
+        return;
+      }
+
+      const snap = await getDocs(collection(db, "users"));
+
+      let html = "";
+
+      snap.forEach(docItem => {
+        const user = docItem.data();
+
+        if (user.name && user.name.toLowerCase().includes(value)) {
+          html += `
+            <div class="user-result" onclick="openProfile('${docItem.id}')">
+              👤 ${user.name}
+            </div>
+          `;
+        }
+      });
+
+      resultsBox.innerHTML = html || "<p>لا يوجد نتائج ❌</p>";
+    });
+  }
+
   loadItems();
   updateViews();
 });
 
 /* ===== حالة المستخدم ===== */
 onAuthStateChanged(auth, (user) => {
-  userBox.innerText = user ? "👤 " + user.displayName : "غير مسجل";
+  currentUser = user;
+
+  if (userBox) {
+    userBox.innerText = user
+      ? "👤 " + (user.displayName || user.email)
+      : "غير مسجل";
+  }
 });
 
 /* ===== تسجيل دخول ===== */
 window.login = async function () {
   try {
     const provider = new GoogleAuthProvider();
-
-    // 🔥 مهم: خليه ينتظر فعلاً
     const result = await signInWithPopup(auth, provider);
 
-    if (!result.user) {
-      alert("❌ فشل تسجيل الدخول");
-      return;
-    }
+    if (!result.user) return alert("❌ فشل تسجيل الدخول");
 
     alert("✅ تم تسجيل الدخول");
-
-    loadItems(); // تحديث البيانات بعد الدخول
+    loadItems();
 
   } catch (e) {
-    console.log(e);
-
-    // 🔥 منع الوميض أو الإغلاق المفاجئ
-    if (e.code === "auth/popup-closed-by-user") return;
-
-    alert("❌ خطأ: " + e.message);
+    if (e.code !== "auth/popup-closed-by-user") {
+      alert("❌ خطأ: " + e.message);
+    }
   }
 };
+window.goProfile = function () {
+  const user = auth.currentUser;
 
-/* ===== popup ===== */
+  if (!user) {
+    alert("سجل دخول الأول ❌");
+    return;
+  }
+
+  // 🔥 افتح بروفايلك
+  window.location.href = "profile.html";
+};
+
+/* ===== Online System ===== */
+const userId = Date.now().toString();
+const userRef = ref(dbRT, "onlineUsers/" + userId);
+
+set(userRef, true);
+onDisconnect(userRef).remove();
+
+onValue(ref(dbRT, "onlineUsers"), (snapshot) => {
+  const data = snapshot.val();
+  const count = data ? Object.keys(data).length : 0;
+
+  const el = document.getElementById("onlineCount");
+  if (el) el.innerText = count;
+});
+
+/* ===== Popup ===== */
 window.openAddPopup = () => popup.style.display = "flex";
 window.closePopup = () => popup.style.display = "none";
 
-/* ===== حفظ ===== */
+/* ===== نشر ===== */
 window.saveItem = async function () {
-  console.log("🔥 تم الضغط على نشر");
 
-  let poemEl = document.getElementById("name");
-  let titleEl = document.getElementById("price");
-  let catEl = document.getElementById("poemCategory");
+  let poem = document.getElementById("name").value.trim();
+  let title = document.getElementById("price").value.trim();
+  let category = document.getElementById("poemCategory").value;
 
-  if (!poemEl || !titleEl || !catEl) {
-    alert("❌ في عنصر ناقص في الصفحة");
-    return;
-  }
+  if (!currentUser) return alert("⚠️ لازم تسجل دخول");
+  if (!poem || !title) return alert("⚠️ اكتب البيانات");
 
-  let poem = poemEl.value.trim();
-  let title = titleEl.value.trim();
-  let category = catEl.value;
+  await addDoc(collection(db, "products"), {
+    name: poem,
+    price: title,
+    category,
+    uid: currentUser.uid,
+    likes: 0,
+    smiles: 0,
+    createdAt: Date.now()
+  });
 
-  if (!auth.currentUser) {
-    alert("⚠️ لازم تسجل دخول الأول");
-    return;
-  }
-
-  if (!poem || !title) {
-    alert("⚠️ اكتب القصيدة والعنوان");
-    return;
-  }
-
-  try {
-    await addDoc(collection(db, "products"), {
-      name: poem,
-      price: title,
-      category,
-      uid: auth.currentUser.uid,
-      likes: 0,
-      smiles: 0,
-      createdAt: Date.now()
-    });
-
-    alert("✅ تم نشر القصيدة");
-
-    // 🔥 امسح الحفظ التلقائي هنا 👇
-    localStorage.removeItem("poem");
-    localStorage.removeItem("title");
-    localStorage.removeItem("category");
-
-    // 🔥 تنظيف الحقول
-    poemEl.value = "";
-    titleEl.value = "";
-
-    closePopup();
-    loadItems();
-
-  } catch (error) {
-    console.error("🔥 خطأ:", error);
-    alert("❌ فشل النشر: " + error.message);
-  }
-};
-
-/* ===== Like ===== */
-function createLikeButton(data, id) {
-  let btn = document.createElement("button");
-  btn.classList.add("like-btn");
-
-  const liked = JSON.parse(localStorage.getItem("liked") || "[]");
-  let isLiked = liked.includes(id);
-
-  btn.innerHTML = `❤️ ${data.likes || 0}`;
-  if (isLiked) btn.disabled = true;
-
-  btn.onclick = async () => {
-    if (isLiked) return;
-
-    try {
-      await updateDoc(doc(db, "products", id), {
-        likes: increment(1)
-      });
-
-      data.likes++;
-      btn.innerHTML = `❤️ ${data.likes}`;
-      btn.disabled = true;
-
-      liked.push(id);
-      localStorage.setItem("liked", JSON.stringify(liked));
-    } catch (e) {
-      alert("خطأ في اللايك ❌");
-      console.log(e);
-    }
-  };
-
-  return btn;
-}
-
-/* ===== Smile ===== */
-function createSmileButton(data, id) {
-  let btn = document.createElement("button");
-  btn.classList.add("smile-btn");
-
-  const smiled = JSON.parse(localStorage.getItem("smiled") || "[]");
-  let isSmiled = smiled.includes(id);
-
-  btn.innerHTML = `😊 ${data.smiles || 0}`;
-  if (isSmiled) btn.disabled = true;
-
-  btn.onclick = async () => {
-    if (isSmiled) return;
-
-    try {
-      await updateDoc(doc(db, "products", id), {
-        smiles: increment(1)
-      });
-
-      data.smiles++;
-      btn.innerHTML = `😊 ${data.smiles}`;
-      btn.disabled = true;
-
-      smiled.push(id);
-      localStorage.setItem("smiled", JSON.stringify(smiled));
-    } catch (e) {
-      alert("خطأ في السمايل ❌");
-      console.log(e);
-    }
-  };
-
-  return btn;
-}
-
-/* ===== حذف ===== */
-window.deleteItem = async function (id) {
-  if (!confirm("متأكد؟")) return;
-  await deleteDoc(doc(db, "products", id));
+  alert("✅ تم النشر");
+  closePopup();
   loadItems();
 };
 
@@ -245,9 +168,7 @@ window.deleteItem = async function (id) {
 async function loadItems() {
   if (!container) return;
 
-  const q = query(collection(db, "products"), orderBy("likes", "desc"));
-  const snap = await getDocs(q);
-
+  const snap = await getDocs(query(collection(db, "products"), orderBy("likes", "desc")));
   container.innerHTML = "";
 
   snap.forEach(docSnap => {
@@ -264,66 +185,24 @@ async function loadItems() {
       </a>
     `;
 
-    let actions = document.createElement("div");
-    actions.className = "actions";
-
-    actions.append(
-      createLikeButton(data, id),
-      createSmileButton(data, id)
-    );
-
-    if (auth.currentUser && auth.currentUser.uid === data.uid) {
-      let del = document.createElement("button");
-      del.innerText = "🗑 حذف";
-      del.onclick = () => deleteItem(id);
-      actions.append(del);
-    }
-
-    div.appendChild(actions);
     container.appendChild(div);
   });
 }
 
 /* ===== زيارات ===== */
 async function updateViews() {
-  const ref = doc(db, "stats", "visits");
+  const refDoc = doc(db, "stats", "visits");
 
-  await updateDoc(ref, { count: increment(1) }).catch(async () => {
-    await setDoc(ref, { count: 1 });
+  await updateDoc(refDoc, { count: increment(1) }).catch(async () => {
+    await setDoc(refDoc, { count: 1 });
   });
 
-  const snap = await getDoc(ref);
-  document.getElementById("viewsCount").innerText = snap.data().count;
-}
-/* ===== 🔥 Auto Save ===== */
-
-// عناصر
-const poemInput = document.getElementById("name");
-const titleInput = document.getElementById("price");
-const categoryInput = document.getElementById("poemCategory");
-
-// 🔹 تحميل البيانات المحفوظة
-window.addEventListener("DOMContentLoaded", () => {
-  if (poemInput) poemInput.value = localStorage.getItem("poem") || "";
-  if (titleInput) titleInput.value = localStorage.getItem("title") || "";
-  if (categoryInput) categoryInput.value = localStorage.getItem("category") || "حب";
-});
-
-// 🔹 حفظ تلقائي أثناء الكتابة
-if (poemInput) {
-  poemInput.addEventListener("input", () => {
-    localStorage.setItem("poem", poemInput.value);
-  });
+  const snap = await getDoc(refDoc);
+  const el = document.getElementById("viewsCount");
+  if (el) el.innerText = snap.data().count;
 }
 
-if (titleInput) {
-  titleInput.addEventListener("input", () => {
-    localStorage.setItem("title", titleInput.value);
-  });
-}
-
-if (categoryInput) {
-  categoryInput.addEventListener("change", () => {
-    localStorage.setItem("category", categoryInput.value);
-  });
-}
+/* 🔗 فتح بروفايل */
+window.openProfile = function(uid) {
+  window.location.href = "profile.html?uid=" + uid;
+};
