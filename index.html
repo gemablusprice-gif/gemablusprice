@@ -30,20 +30,28 @@
 </div>
 
 <!-- Header -->
+<!-- Header -->
 <header class="header">
   <h1 class="logo-text">اكتب قصيدتك… ودع العالم يشعر بك ❤️</h1>
 
+  <!-- 👤 المستخدم -->
   <div id="userBox">غير مسجل</div>
 
   <div class="actions">
     <button class="btn" onclick="login()">🔐 تسجيل دخول</button>
+
+    <!-- 👤 زر البروفايل -->
+    <button class="btn" onclick="goProfile()">👤 حسابي</button>
 
     <div class="online-box">
       👀 <span id="onlineCount">0</span> متصل الآن
     </div>
   </div>
 </header>
-
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="🔍 ابحث عن مستخدم..." />
+  <div id="searchResults"></div>
+</div>
 <!-- Hero -->
 <div class="hero">
   <h2>شارك مشاعرك… واكتشف أجمل القصائد</h2>
@@ -111,6 +119,5 @@ function closeWelcome() {
   document.getElementById("welcomeBox").style.display = "none";
 }
 </script>
-
 </body>
 </html>
